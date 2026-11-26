@@ -1,0 +1,11 @@
+{
+  "source": "Map Tunisia",
+  "sourceVersion": "1.4.0",
+  "sourceUrl": "https://github.com/Alaa-Taieb/map-tunisia",
+  "license": "ODbL-1.0",
+  "attribution": "Map data © OpenStreetMap contributors · Map Tunisia by Alaa Taieb",
+  "files": {
+    "governorates.geojson": "tunisia-governorates-low",
+    "ben-arous-delegations.geojson": "tunisia-delegations-high (governorate = TN-13)"
+  }
+}

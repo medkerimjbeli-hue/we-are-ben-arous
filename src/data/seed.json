@@ -1,0 +1,640 @@
+{
+  "_note": "Initial content supplied by the owner. Labels and URLs preserved exactly. Delegation geometry/ids from Map Tunisia (ODbL).",
+  "delegations": [
+    {
+      "id": "delegation-1351",
+      "insCode": "1351",
+      "governorateId": "TN-13",
+      "slug": "ben-arous",
+      "name": {
+        "en": "Ben Arous",
+        "fr": "Ben Arous",
+        "ar": "بن عروس"
+      },
+      "sourceName": {
+        "en": "Ben Arous",
+        "fr": "Ben Arous",
+        "ar": "بن عروس"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1352",
+      "insCode": "1352",
+      "governorateId": "TN-13",
+      "slug": "la-nouvelle-medina",
+      "name": {
+        "en": "La Nouvelle Médina",
+        "fr": "La Nouvelle Médina",
+        "ar": "المدينة الجديدة"
+      },
+      "sourceName": {
+        "en": "La Nouvelle Médina",
+        "fr": "La Nouvelle Médina",
+        "ar": "المدينة الجديدة"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1353",
+      "insCode": "1353",
+      "governorateId": "TN-13",
+      "slug": "el-mourouj",
+      "name": {
+        "en": "El Mourouj",
+        "fr": "El Mourouj",
+        "ar": "المروج"
+      },
+      "sourceName": {
+        "en": "El Mourouj",
+        "fr": "El Mourouj",
+        "ar": "المروج"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1354",
+      "insCode": "1354",
+      "governorateId": "TN-13",
+      "slug": "hammam-lif",
+      "name": {
+        "en": "Hammam Lif",
+        "fr": "Hammam Lif",
+        "ar": "حمام الأنف"
+      },
+      "sourceName": {
+        "en": "Hammam Lif",
+        "fr": "Hammam Lif",
+        "ar": "حمام الأنف"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1355",
+      "insCode": "1355",
+      "governorateId": "TN-13",
+      "slug": "hammam-chott",
+      "name": {
+        "en": "Hammam Chott",
+        "fr": "Hammam Chott",
+        "ar": "حمام الشط"
+      },
+      "sourceName": {
+        "en": "Hammam Chott",
+        "fr": "Hammam Chott",
+        "ar": "حمام الشط"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1356",
+      "insCode": "1356",
+      "governorateId": "TN-13",
+      "slug": "bou-mhel-el-bassatine",
+      "name": {
+        "en": "Bou Mhel El Bassatine",
+        "fr": "Bou Mhel El Bassatine",
+        "ar": "بومهل البساتين"
+      },
+      "sourceName": {
+        "en": "Bou Mhel El Bassatine",
+        "fr": "Bou Mhel El Bassatine",
+        "ar": "بومهل البساتين"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1357",
+      "insCode": "1357",
+      "governorateId": "TN-13",
+      "slug": "ezzahra",
+      "name": {
+        "en": "Ezzahra",
+        "fr": "Ezzahra",
+        "ar": "الزهراء"
+      },
+      "sourceName": {
+        "en": "Ezzahra",
+        "fr": "Ezzahra",
+        "ar": "الزهراء"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1358",
+      "insCode": "1358",
+      "governorateId": "TN-13",
+      "slug": "rades",
+      "name": {
+        "en": "Radès",
+        "fr": "Radès",
+        "ar": "رادس"
+      },
+      "sourceName": {
+        "en": "Radès",
+        "fr": "Radès",
+        "ar": "رادس"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1359",
+      "insCode": "1359",
+      "governorateId": "TN-13",
+      "slug": "megrine",
+      "name": {
+        "en": "Megrine",
+        "fr": "Megrine",
+        "ar": "مقرين"
+      },
+      "sourceName": {
+        "en": "Megrine",
+        "fr": "Megrine",
+        "ar": "مقرين"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1360",
+      "insCode": "1360",
+      "governorateId": "TN-13",
+      "slug": "mohamedia",
+      "name": {
+        "en": "Mohamedia",
+        "fr": "Mohamedia",
+        "ar": "المحمدية"
+      },
+      "sourceName": {
+        "en": "Mohamedia",
+        "fr": "Mohamedia",
+        "ar": "المحمدية"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1361",
+      "insCode": "1361",
+      "governorateId": "TN-13",
+      "slug": "fouchana",
+      "name": {
+        "en": "Fouchana",
+        "fr": "Fouchana",
+        "ar": "فوشانة"
+      },
+      "sourceName": {
+        "en": "Fouchana",
+        "fr": "Fouchana",
+        "ar": "فوشانة"
+      },
+      "status": "available"
+    },
+    {
+      "id": "delegation-1362",
+      "insCode": "1362",
+      "governorateId": "TN-13",
+      "slug": "mornag",
+      "name": {
+        "en": "Mornag",
+        "fr": "Mornag",
+        "ar": "مرناق"
+      },
+      "sourceName": {
+        "en": "Mornag",
+        "fr": "Mornag",
+        "ar": "مرناق"
+      },
+      "status": "available"
+    }
+  ],
+  "categories": [
+    {
+      "id": "68729667-9026-488f-ab1c-f2689429ee0a",
+      "slug": "heritage",
+      "name": {
+        "en": "Heritage",
+        "fr": "Patrimoine",
+        "ar": "تراث"
+      },
+      "sortOrder": 1
+    },
+    {
+      "id": "5f9b4d1f-fb61-44c0-9d7b-a3b36f8ee9eb",
+      "slug": "history",
+      "name": {
+        "en": "History",
+        "fr": "Histoire",
+        "ar": "تاريخ"
+      },
+      "sortOrder": 2
+    },
+    {
+      "id": "f8c6c80b-45d8-4d17-9597-38fd78b5c23b",
+      "slug": "nature",
+      "name": {
+        "en": "Nature",
+        "fr": "Nature",
+        "ar": "طبيعة"
+      },
+      "sortOrder": 3
+    },
+    {
+      "id": "5a423a55-c1dd-4b70-b750-66e747b51cee",
+      "slug": "culture",
+      "name": {
+        "en": "Culture",
+        "fr": "Culture",
+        "ar": "ثقافة"
+      },
+      "sortOrder": 4
+    },
+    {
+      "id": "a3acdb47-1299-4f65-87dc-c0058c2b4e34",
+      "slug": "architecture",
+      "name": {
+        "en": "Architecture",
+        "fr": "Architecture",
+        "ar": "عمارة"
+      },
+      "sortOrder": 5
+    },
+    {
+      "id": "77a74d2b-53a1-443d-964b-462c6728d251",
+      "slug": "food",
+      "name": {
+        "en": "Food",
+        "fr": "Gastronomie",
+        "ar": "أكل"
+      },
+      "sortOrder": 6
+    },
+    {
+      "id": "9cf30804-9364-43ed-b83d-d467d8271a27",
+      "slug": "local-business",
+      "name": {
+        "en": "Local business",
+        "fr": "Commerce local",
+        "ar": "نشاط محلي"
+      },
+      "sortOrder": 7
+    },
+    {
+      "id": "544be416-b9d0-41ec-a3f9-0c7ff4b9a440",
+      "slug": "leisure",
+      "name": {
+        "en": "Leisure",
+        "fr": "Loisirs",
+        "ar": "ترفيه"
+      },
+      "sortOrder": 8
+    },
+    {
+      "id": "760080e5-b5dc-4e3f-95a1-bac02b5d2002",
+      "slug": "hidden-gem",
+      "name": {
+        "en": "Hidden gem",
+        "fr": "Pépite cachée",
+        "ar": "كنز مخفي"
+      },
+      "sortOrder": 9
+    }
+  ],
+  "locations": [
+    {
+      "id": "1af7dbf8-5d04-4782-9fbe-93b69cc7b1ed",
+      "kind": "place",
+      "slug": "saraya",
+      "delegationId": "delegation-1360",
+      "categoryId": null,
+      "name": {
+        "en": "Saraya",
+        "fr": "Saraya"
+      },
+      "summary": {},
+      "story": {},
+      "address": {},
+      "lat": null,
+      "lng": null,
+      "coordinateStatus": "unverified",
+      "coordinateSource": null,
+      "coverMediaId": null,
+      "status": "published",
+      "featured": false,
+      "sourceNotes": "Owner-supplied label and delegation grouping (reference-assets/content/Instagram ref.txt). Not independently verified. Owner grouping: \"Mohammedia\".",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "7b61a430-2c24-43f0-9233-bf8ca2e56aa3",
+      "kind": "place",
+      "slug": "louzina",
+      "delegationId": "delegation-1354",
+      "categoryId": null,
+      "name": {
+        "en": "Louzina",
+        "fr": "Louzina"
+      },
+      "summary": {},
+      "story": {},
+      "address": {},
+      "lat": null,
+      "lng": null,
+      "coordinateStatus": "unverified",
+      "coordinateSource": null,
+      "coverMediaId": null,
+      "status": "published",
+      "featured": false,
+      "sourceNotes": "Owner-supplied label and delegation grouping (reference-assets/content/Instagram ref.txt). Not independently verified. Owner grouping: \"Hammam Lif\".",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "807ae6a3-2a24-41ac-a24f-8774bf64a390",
+      "kind": "place",
+      "slug": "demous-chenoi",
+      "delegationId": "delegation-1354",
+      "categoryId": null,
+      "name": {
+        "en": "Demous Chenoi",
+        "fr": "Demous Chenoi"
+      },
+      "summary": {},
+      "story": {},
+      "address": {},
+      "lat": null,
+      "lng": null,
+      "coordinateStatus": "unverified",
+      "coordinateSource": null,
+      "coverMediaId": null,
+      "status": "published",
+      "featured": false,
+      "sourceNotes": "Owner-supplied label and delegation grouping (reference-assets/content/Instagram ref.txt). Not independently verified. Owner grouping: \"Hammam Lif\".",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "760a2d8a-c9be-4eef-9211-4b4ce68f0903",
+      "kind": "place",
+      "slug": "old-factory",
+      "delegationId": "delegation-1362",
+      "categoryId": null,
+      "name": {
+        "en": "Old Factory",
+        "fr": "Old Factory"
+      },
+      "summary": {},
+      "story": {},
+      "address": {},
+      "lat": null,
+      "lng": null,
+      "coordinateStatus": "unverified",
+      "coordinateSource": null,
+      "coverMediaId": null,
+      "status": "published",
+      "featured": false,
+      "sourceNotes": "Owner-supplied label and delegation grouping (reference-assets/content/Instagram ref.txt). Not independently verified. Owner grouping: \"Mornag\".",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "d36c6cc5-e415-4466-8dc9-385cfe493951",
+      "kind": "place",
+      "slug": "rebelle-club",
+      "delegationId": "delegation-1361",
+      "categoryId": null,
+      "name": {
+        "en": "Rebelle Club",
+        "fr": "Rebelle Club"
+      },
+      "summary": {},
+      "story": {},
+      "address": {},
+      "lat": null,
+      "lng": null,
+      "coordinateStatus": "unverified",
+      "coordinateSource": null,
+      "coverMediaId": null,
+      "status": "published",
+      "featured": false,
+      "sourceNotes": "Owner-supplied label and delegation grouping (reference-assets/content/Instagram ref.txt). Not independently verified. Owner grouping: \"Fouchena\".",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "5b055488-e4d0-4b7a-95e3-23cd1ebe5da9",
+      "kind": "place",
+      "slug": "les-coupoles",
+      "delegationId": "delegation-1355",
+      "categoryId": null,
+      "name": {
+        "en": "Les Coupoles",
+        "fr": "Les Coupoles"
+      },
+      "summary": {},
+      "story": {},
+      "address": {},
+      "lat": null,
+      "lng": null,
+      "coordinateStatus": "unverified",
+      "coordinateSource": null,
+      "coverMediaId": null,
+      "status": "published",
+      "featured": false,
+      "sourceNotes": "Owner-supplied label and delegation grouping (reference-assets/content/Instagram ref.txt). Not independently verified. Owner grouping: \"Hammam Chat\".",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    }
+  ],
+  "socialPosts": [
+    {
+      "id": "bfd7453d-f3bb-49b7-a678-6b41a4aa208e",
+      "url": "https://www.instagram.com/reel/DaDryxTt9Om/?utm_source=ig_web_copy_link&fqnt=MzRlODBiNWFlZA==&avpt=MzRlODBiNWFlZA==",
+      "label": "Saraya",
+      "delegationId": "delegation-1360",
+      "locationId": "1af7dbf8-5d04-4782-9fbe-93b69cc7b1ed",
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 1,
+      "reviewNote": null,
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "3051f945-29de-4ff6-8ff5-258dc8a1b733",
+      "url": "https://www.instagram.com/p/Daai0sOjYF1/?utm_source=ig_web_copy_link&dmpr=MzRlODBiNWFlZA==&avpt=MzRlODBiNWFlZA==",
+      "label": "Hammam Lif",
+      "delegationId": "delegation-1354",
+      "locationId": null,
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 2,
+      "reviewNote": "Owner grouped this post under \"Hammam Lif\" without naming a specific place. Linked to the delegation only; link a location once confirmed.",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "8af9b5f4-71b1-443f-a124-a33dab9cffb3",
+      "url": "https://www.instagram.com/reel/DgNllkUNZyO/?utm_source=ig_web_copy_link&hvrq=MzRlODBiNWFlZA==&avpt=MzRlODBiNWFlZA==",
+      "label": "Louzina",
+      "delegationId": "delegation-1354",
+      "locationId": "7b61a430-2c24-43f0-9233-bf8ca2e56aa3",
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 3,
+      "reviewNote": null,
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "a8fc6121-f297-464b-8a5d-ac3b52b3277f",
+      "url": "https://www.instagram.com/reel/DaVuY98Mrnp/?utm_source=ig_web_copy_link&cnvx=MzRlODBiNWFlZA==&avpt=MzRlODBiNWFlZA==",
+      "label": "Demous Chenoi",
+      "delegationId": "delegation-1354",
+      "locationId": "807ae6a3-2a24-41ac-a24f-8774bf64a390",
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 4,
+      "reviewNote": null,
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "e586cabe-5330-4b04-aa4a-0d4618938723",
+      "url": "https://www.instagram.com/reel/Df2uk0RNOHp/?utm_source=ig_web_copy_link&gwpx=MzRlODBiNWFlZA==&avpt=MzRlODBiNWFlZA==",
+      "label": "Old Factory",
+      "delegationId": "delegation-1362",
+      "locationId": "760a2d8a-c9be-4eef-9211-4b4ce68f0903",
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 5,
+      "reviewNote": null,
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "b07de48f-1218-493c-bead-60ee9d6f4699",
+      "url": "https://www.instagram.com/reel/DaqgA-GtXV1/?utm_source=ig_web_copy_link&dmpr=MzRlODBiNWFlZA==&avpt=MzRlODBiNWFlZA==",
+      "label": "Rebelle Club",
+      "delegationId": "delegation-1361",
+      "locationId": "d36c6cc5-e415-4466-8dc9-385cfe493951",
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 6,
+      "reviewNote": null,
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "180cc02b-93fb-4afa-9e70-f2a6469a2f9f",
+      "url": "https://www.instagram.com/reel/DaSNKJqNarH/?utm_source=ig_web_copy_link&bqrl=MzRlODBiNWFlZA==&avpt=MzRlODBiNWFlZA==",
+      "label": "Rades",
+      "delegationId": "delegation-1358",
+      "locationId": null,
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 7,
+      "reviewNote": "Owner grouped this post under \"Rades\" without naming a specific place. Linked to the delegation only; link a location once confirmed.",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "fe563246-110a-47cb-b5d5-4341f1392b1f",
+      "url": "https://www.instagram.com/reel/DbWVoWZNd90/?utm_source=ig_web_copy_link&hvrq=MzRlODBiNWFlZA==&avpt=MzRlODBiNWFlZA==",
+      "label": "Les Coupoles",
+      "delegationId": "delegation-1355",
+      "locationId": "5b055488-e4d0-4b7a-95e3-23cd1ebe5da9",
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 8,
+      "reviewNote": null,
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "cf5a8464-53ee-40ea-833e-0a89ce06799c",
+      "url": "https://www.instagram.com/reel/DZabbx0N8VA/?utm_source=ig_web_copy_link&evlk=MzRlODBiNWFlZA==&avpt=MzRlODBiNWFlZA==",
+      "label": "Hammam Chat",
+      "delegationId": "delegation-1355",
+      "locationId": null,
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 9,
+      "reviewNote": "Owner grouped this post under \"Hammam Chat\" without naming a specific place. Linked to the delegation only; link a location once confirmed.",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    },
+    {
+      "id": "4d5ab080-26b6-4012-a36e-15c6a37e2292",
+      "url": "https://www.instagram.com/reel/DbOfbPMNB3T/?utm_source=ig_web_copy_link&avpt=MzRlODBiNWFlZA==",
+      "label": "Ezzahra",
+      "delegationId": "delegation-1357",
+      "locationId": null,
+      "caption": {},
+      "metricType": null,
+      "metricValue": null,
+      "metricSource": null,
+      "metricVerifiedAt": null,
+      "status": "published",
+      "featured": false,
+      "featuredRank": null,
+      "sortOrder": 10,
+      "reviewNote": "Owner grouped this post under \"Ezzahra\" without naming a specific place. Linked to the delegation only; link a location once confirmed.",
+      "createdAt": "2026-11-27T00:00:00.000Z",
+      "updatedAt": "2026-11-27T00:00:00.000Z"
+    }
+  ],
+  "media": []
+}

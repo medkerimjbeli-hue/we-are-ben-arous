@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+*.local
+.env
+.env.*
+!.env.example
+# Local clone of https://github.com/Alaa-Taieb/map-tunisia (has its own git history).
+# The derived subset the site needs lives in public/geo (see scripts/geo/build.mjs).
+map-data/map-tunisia/
+supabase/.temp/
+.DS_Store

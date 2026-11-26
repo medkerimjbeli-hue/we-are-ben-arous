@@ -1,0 +1,87 @@
+@import 'tailwindcss';
+
+/* Brand tokens (from the master brief). */
+:root {
+  --color-primary: #F0002E;
+  --color-secondary: #FFFFFF;
+  --color-accent: #8B001B;
+  --color-bg-main: #080808;
+  --color-bg-secondary: #151515;
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #A6A6A6;
+  --color-border: #303030;
+  color-scheme: dark;
+}
+
+@theme {
+  --color-primary: #F0002E;
+  --color-accent: #8B001B;
+  --color-ink: #080808;
+  --color-ink-2: #151515;
+  --color-ink-3: #1e1e1e;
+  --color-line: #303030;
+  --color-muted: #A6A6A6;
+  --font-display: 'Montserrat', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-sans: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+}
+
+/* Arabic UI: Montserrat/Inter have no Arabic glyphs, so IBM Plex Sans Arabic leads. */
+:lang(ar) { --font-display: 'IBM Plex Sans Arabic', 'Montserrat', system-ui, sans-serif; --font-sans: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif; }
+
+html { background: var(--color-bg-main); }
+body {
+  margin: 0; background: var(--color-bg-main); color: var(--color-text-main);
+  font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4, .font-display { font-family: var(--font-display); }
+:lang(ar) h1, :lang(ar) h2, :lang(ar) h3 { letter-spacing: 0 !important; line-height: 1.35; }
+
+/* Mixed-language content keeps its own direction but aligns with the page. In the base layer so utilities (e.g. text-center) still win. */
+@layer base {
+  :root[dir='rtl'] [dir='auto'] { text-align: right; }
+  :root[dir='ltr'] [dir='auto'] { text-align: left; }
+}
+
+:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--color-primary); color: #fff; }
+
+.skip-link { position: absolute; inset-inline-start: 1rem; top: -100px; z-index: 100; }
+.skip-link:focus { top: 1rem; }
+
+.grain::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .06; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.btn { display: inline-flex; align-items: center; gap: .5rem; border-radius: 999px; padding: .75rem 1.35rem; font-family: var(--font-display); font-weight: 700; font-size: .95rem; transition: background .2s, color .2s, border-color .2s, transform .2s; min-height: 44px; }
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary:hover { background: #ff1a45; }
+.btn-ghost { border: 1px solid var(--color-border); color: #fff; }
+.btn-ghost:hover { border-color: #fff; }
+.card { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 1.25rem; }
+.chip { display: inline-flex; align-items: center; gap: .35rem; border: 1px solid var(--color-border); border-radius: 999px; padding: .2rem .7rem; font-size: .78rem; color: var(--color-text-muted); }
+.field { width: 100%; background: #0f0f0f; border: 1px solid var(--color-border); border-radius: .75rem; padding: .65rem .85rem; color: #fff; min-height: 44px; }
+.field:focus { border-color: var(--color-primary); outline: none; box-shadow: 0 0 0 3px rgb(240 0 46 / .35); }
+.label { display: block; font-size: .8rem; font-weight: 600; color: var(--color-text-muted); margin-bottom: .35rem; }
+
+/* Leaflet */
+.leaflet-container { background: #0b0b0b !important; font-family: var(--font-sans); }
+.leaflet-container .leaflet-control-attribution { background: rgb(8 8 8 / .8); color: var(--color-text-muted); font-size: 11px; }
+.leaflet-container .leaflet-control-attribution a { color: #fff; }
+.leaflet-interactive:focus { outline: none; }
+path.leaflet-interactive:focus-visible { stroke: #fff; stroke-width: 3; }
+.wab-label { background: transparent; border: 0; box-shadow: none; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 11px; text-shadow: 0 1px 3px #000, 0 0 8px #000; white-space: nowrap; }
+.wab-label::before { display: none; }
+.wab-callout span { position: absolute; transform: translate(calc(-100% - 10px), -50%); display: inline-block; white-space: nowrap; background: var(--color-primary); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 999px; box-shadow: 0 6px 20px rgb(0 0 0 / .5); }
+.wab-pin { display: grid; place-items: center; }
+.wab-pin span { width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--color-primary); border: 2px solid #fff; box-shadow: 0 4px 14px rgb(240 0 46 / .55); transition: transform .15s, background .15s; }
+.wab-pin span::after { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: #fff; }
+.wab-pin:hover span, .wab-pin:focus-visible span, .wab-pin.is-selected span { transform: rotate(-45deg) scale(1.2); background: #fff; }
+.wab-pin.is-selected span::after { background: var(--color-primary); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; }
