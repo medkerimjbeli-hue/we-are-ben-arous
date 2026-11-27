@@ -1,85 +1,155 @@
-# Implementation report: first release
+# Implementation report: launch-readiness pass
 
-Date: 2026-11-27. Nothing has been committed or pushed. There is no git remote yet.
+Updated 2026-11-28. This pass builds on the first release (commit `35c8fab`). Nothing has been pushed.
 
-## Checklist (acceptance criteria from the master brief)
+## Checklist (master brief acceptance criteria)
 
-- [x] Existing repository inspected and preserved (it was an empty scaffold plus reference assets)
-- [x] Supplied logo used unaltered (resized copies for the header, favicon and social preview); brand colours and typography applied
-- [x] Responsive, immersive homepage (drag/swipe arc carousel of the 12 delegations drawn from their real boundaries)
-- [x] All 24 governorates render from real data; Ben Arous selectable; the other 23 marked "coming soon" with an explanation dialog
-- [x] The 12 Ben Arous delegations verified against the source data (INS 1351–1362, `governorate = TN-13`) and selectable
-- [x] Selecting a delegation zooms to its real boundary
-- [x] Pins only at verified coordinates (none yet, so no pins are shown, by design)
-- [x] Discovery pins open an accessible preview card (works as soon as an admin verifies a position)
-- [x] Location detail pages, share/copy link, related places
-- [x] 10 Instagram URLs preserved exactly; linked to a location only when the label names a specific place
-- [x] Instagram embeds load on click, with a fallback card and link
-- [x] Five featured posts chosen manually in the CMS (no fabricated ranking)
-- [x] Search, delegation, category and type filters (accent- and Arabic-insensitive)
-- [x] English, French and Arabic, with Arabic RTL across the public site
-- [x] Browsing without an account
-- [x] Admin protected by Supabase Auth and database RLS (not just hidden in the UI)
-- [x] Admins can manage locations, stories, posts, translations, categories, images, delegation labels and publication status
+- [x] Existing repository inspected and preserved: no rewrite, the first release was extended
+- [x] Supplied logo, brand colours and typography; accessibility tints documented (see "Contrast")
+- [x] Responsive, immersive homepage with the delegation carousel drawn from real boundaries
+- [x] All 24 governorates from real data; Ben Arous unlocked; the other 23 "coming soon" with a dialog and a list
+- [x] 12 Ben Arous delegations verified against Map Tunisia (INS 1351–1362, `TN-13`); selectable on the map **and** in a list
+- [x] Delegation zoom fits the real boundary, and refits after layout or size changes
+- [x] Discovery pins: verified coordinates only, grouped into clusters with counts, identical positions fanned out, keyboard accessible, a preview card (type, delegation, category, summary, Instagram, related stories, link to details) and a category filter
+- [x] Place and story detail pages, related stories (story ↔ place), SEO overrides
+- [x] 10 Instagram URLs preserved exactly; associations only as supplied; embed fallback; 1–5 featured positions managed in the CMS; metrics only with type, source and date
+- [x] Search and filters (accent- and Arabic-normalised), with an empty state and reset
+- [x] EN/FR/AR across the public site **and the admin dashboard**, with RTL in both
+- [x] Browsing without an account; admin protected by Supabase Auth **and** RLS
+- [x] Full CMS: places, stories, posts, categories, delegation labels, images (with credits and permissions), translations, draft → review → published → archived, preview, edit history, actionable warnings
 - [x] No secrets in the repository or frontend
-- [x] Map attribution on every map, plus a credits section and the ODbL licence shipped with the data
-- [x] GitHub Pages workflow
-- [x] Production build and tests pass
-- [x] README and setup/deployment/content docs
+- [x] Map attribution and ODbL licence kept; no tile-policy violations
+- [x] GitHub Pages workflow (now also runs type checks and the database verification)
+- [x] Tests, lint, type checks, geo validation, DB verification and production build all pass
+- [x] Documentation: README, BACKEND_SETUP, DEPLOYMENT, CONTENT_GUIDE, INSTAGRAM, this report
 
-## Completed and tested
+## 1. What this pass completed
 
-| Area | How it was verified |
-| --- | --- |
-| Geo data (24 governorates, 12 delegations, closed rings, bounds, ids/INS prefix, TN-13 membership, Arabic names match the owner's list) | `npm run geo:validate` and `tests/data.test.ts` |
-| Seed content: URLs/labels identical to `Instagram ref.txt`, delegation per owner grouping, no invented coordinates/categories/metrics | `tests/data.test.ts` |
-| Search, filters, featured selection, delegation-only posts | `tests/data.test.ts` |
-| Translation key parity (en/fr/ar), official slogans, fallback logic, Arabic normalisation | `tests/logic.test.ts` |
-| Instagram URL parsing (rejects lookalike domains, http, profile URLs) | `tests/logic.test.ts` |
-| CMS validation rules (verified coordinates need a source, Ben Arous bounds, duplicate URL/featured position, incomplete metrics) | `tests/logic.test.ts` |
-| RLS present on every table, published-only public reads, admin-only writes, no write path to `admin_users` (static check of the migration) | `tests/logic.test.ts` |
-| Arabic sets `dir=rtl`, the language switcher keeps the page, unprefixed URLs redirect, empty search state and reset, 404 for unknown places, detail page hides missing fields | `tests/ui.test.tsx` |
-| `/admin` without a backend grants no access | `tests/ui.test.tsx` |
-| In-browser (Vite dev server): home carousel on mobile, Tunisia map (24 shapes, keyboard-focusable), "Ben Arous · Available" label, coming-soon dialog via keyboard (focus moves into it), delegation zoom, Arabic RTL layout, a **real Instagram embed** loaded, no console errors, no horizontal overflow at 375 px and 1024 px | Manual QA in the built-in browser |
-| Production build, including the `/WE-ARE-BEN-AROUS/` sub-path, `404.html`, robots and sitemap | `npm run build` |
+**Map and pins**
+- Screen-space **clustering**: a numbered marker that zooms in when clicked. Pins at identical positions fan out on a circle. Story pins use the deep red.
+- Pin previews: show type and category, link to related stories, have a 44 px close button, and move focus to the card. They sit above the map attribution.
+- **Fixed a real bug:** after a lazy-load or a layout change, the map stayed off-centre. It now refits automatically until the visitor pans or zooms.
+- Mobile: one finger scrolls the page and two fingers move the map, with a hint shown on touch screens.
+- The governorate list no longer depends on fetching the map file. A bundled index (`src/data/governorates.json`) is generated by `geo:build` and tested against the GeoJSON.
+- **Fixed a CSS bug** that drew pins as white blobs.
 
-**Results:** `geo:validate` passes; ESLint reports 0 problems; TypeScript strict reports 0 errors; **Vitest: 3 files, 37 tests, all passing**; `vite build` succeeds.
+**Content model**
+- `seo_title` and `seo_description` on each place or story, in three languages.
+- `place_id` lets a story point to the place it's about, so "Related stories" appear on the place and "A story about…" on the story.
+- Prepared for other governorates: `governorate_id` is constrained to Tunisian ISO codes; unlocking a governorate is a one-line change (`AVAILABLE_GOVERNORATES`) plus its delegations.
 
-## Implemented but waiting on credentials or configuration
+**CMS**
+- The whole dashboard is translated (EN/FR/AR) with Arabic RTL. Its language is stored separately from the public-site language.
+- **Actionable dashboard:** "What needs attention" counts content to review, drafts, missing translations, missing descriptions, missing positions, missing photos, images without credit or permission, missing categories and unlinked posts. Each item opens the filtered list.
+- The places list has new filters for type and "needs attention".
+- The place editor now has:
+  - a reminder to write only verifiable facts;
+  - a "this story is about" field;
+  - an SEO section;
+  - a cover-image preview;
+  - an OpenStreetMap link to check coordinates;
+  - per-item **edit history**.
+- A new **Edit history** page, backed by a database trigger.
+- **Fixed a real bug:** decimal coordinates couldn't be typed (typing "36." lost the dot). The fields now keep the raw text and reject anything that isn't a number.
+- Image uploads check type (JPEG/PNG/WebP/AVIF only, so no SVG) and size (8 MB) before sending; the database and storage bucket enforce the same limits.
+- Translated error messages: an RLS refusal is explained, a wrong password shows a clear message, and network errors are reported.
+- Password-reset and invitation links now let the admin set a new password inside the dashboard.
+- The admin area carries a `noindex` tag.
 
-- **Supabase backend**: the schema, RLS, storage bucket, triggers and seed are written (`supabase/`), and the admin dashboard is fully wired to them. They **haven't been run against a live Supabase project** because no credentials were provided. Sign-in, CRUD, uploads and the RLS policies need a first test on a real project (see [BACKEND_SETUP.md](BACKEND_SETUP.md)).
-- **GitHub Pages**: the workflow is ready. It needs a GitHub repository, *Pages → Source: GitHub Actions*, and the repository variables.
-- **Canonical URLs and sitemap**: generated automatically once the public URL is known (in CI, from the Pages URL).
+**Supabase hardening** (`20261128000000_hardening.sql`)
+- Audit columns are set by the database and **can't be spoofed** by the client; this was tested.
+- A `content_revisions` edit history: admin read-only, written by a trigger.
+- Anonymous visitors lose insert, update and delete grants entirely (on top of RLS), and lose access to `admin_users` and history.
+- Public image reads exclude images whose permission is "unknown". Publishing with such a cover is blocked by a trigger.
+- The media path format is enforced (`YYYY-MM/<uuid>.<ext>`), which blocks path tricks.
+- `supabase/verify.sql` is a repeatable check script (it rolls back): RLS on, seed integrity, no anonymous write policies, bucket limits, and behaviour as an anonymous visitor and as a non-admin user.
+- Removed the unnecessary `pgcrypto` extension; `gen_random_uuid()` is built into Postgres 13+.
 
-## Not implemented, and why
+**Public site and production**
+- An **error boundary** around routes and the admin, so a failed chunk after a redeploy offers a reload instead of a blank page.
+- No hard-coded interface strings left (ARIA labels, Instagram counts and the breadcrumb are now translated). Arabic plural forms are added for the new counters.
+- SEO: `og:type` and robots meta per route; the 404 page is `noindex`.
+- **Performance:**
+  - the Supabase client (217 kB) is now loaded only when a backend is configured;
+  - Leaflet (148 kB) and its CSS load only with the map;
+  - the first page load now pulls only React and the app code.
+- **Contrast** (WCAG AA): white on `#F0002E` measures 4.43:1 and red text on `#151515` measures 4.13:1, both under the 4.5:1 minimum. The brand red stays for fills, borders and highlights. Small-text buttons use `#E0002B` (4.99:1) and red text uses `#FF3355` (5.09:1). Both are documented in `index.css`.
+- `.gitattributes` normalises line endings.
 
-- **Map pins for the supplied places**: no verified coordinates were supplied, and the brief forbids guessing them. The places appear in lists and on detail pages with a "position not verified" notice. An admin can add verified positions in the CMS and pins appear straight away.
-- **Pin clustering**: no clustering library. There are no pins yet and few are expected at first. Add `leaflet.markercluster` if Ben Arous gets dense groups of pins.
-- **Photography**: `reference-assets/photography/` is empty. Cards use a branded placeholder, and real images can be uploaded with credits via the CMS.
-- **Public story-submission form**: deliberately not built (the brief requires moderation, consent and abuse protection first). Admins publish community stories through the CMS.
-- **Instagram thumbnails, captions and metrics**: not fetched automatically. That would need a Meta app token in a server function, and the brief rules out scraping. The official embed shows the real post when a visitor clicks to load it.
-- **Admin dashboard language**: the CMS interface is in English. All *content* is edited in EN/FR/AR (with RTL Arabic fields). The public site is fully translated.
-- **Raster base map**: none. OpenStreetMap's tile servers don't allow production use, so the map shows only the real vector boundaries on the dark theme, which also keeps it fast. A tile provider can be added later.
+## 2. Testing: what was actually run
 
-## Data the owner still needs to verify
+| Check | Command | Result |
+| --- | --- | --- |
+| Geographic data validation | `npm run geo:validate` | ✅ 24 governorates, 12 delegations valid |
+| ESLint | `npm run lint` | ✅ 0 problems |
+| TypeScript (strict, app + tests + config) | `npm run typecheck` | ✅ 0 errors |
+| Automated tests | `npm test` | ✅ **6 files, 84 tests, all passing** (37 previously) |
+| Database (real PostgreSQL via PGlite: migrations, seed, `verify.sql`) | `npm run db:verify` | ✅ `ALL CHECKS PASSED` |
+| Production build | `npm run build` | ✅, plus a `/WE-ARE-BEN-AROUS/` sub-path build with a 75-line sitemap |
 
-1. **Display spellings.** The source data uses *Mohamedia*, *Fouchana*, *Hammam Chott* and *Radès*. The Instagram file has *Mohammedia*, *Fouchena*, *Hammam Chat* and *Rades*. Post labels are kept exactly as supplied, and delegation labels use the source spelling. You can edit the labels under **Admin → Delegations**.
-2. **Four town-level posts** ("Hammam Lif", "Rades", "Hammam Chat", "Ezzahra") are linked to their delegation only and carry review notes. Link them to a specific place if one applies.
-3. **The six places** (Saraya, Louzina, Demous Chenoi, Old Factory, Rebelle Club, Les Coupoles) are published with the owner's name and delegation only. Their descriptions, categories, photos and **verified coordinates** still need adding. Unpublish any you don't want live yet.
-4. **French and Arabic mission/vision and UI copy** were written for this release. Only the platform description and the slogans came officially in all three languages. The Arabic copy in particular should get a native review.
-5. **The visual-inspiration file** is named "20 most viewed posts…" but contains a GoFundMe screenshot and no metrics. No view counts are used anywhere.
+Test suites:
+- `tests/data.test.ts`: geo integrity, Instagram URLs identical to the reference file, delegation grouping, no fabricated data, search and featured logic, governorate index.
+- `tests/logic.test.ts`: translation parity (public and admin, EN/FR/AR), every validation code translated, Instagram URL parsing, CMS rules, upload limits, clustering, static checks of the migration.
+- `tests/ui.test.tsx` and `tests/ui-more.test.tsx`: **every main route in all three languages** (no raw keys, correct `lang`/`dir`), language switching, the delegation list and empty state, the coming-soon dialog, unknown-delegation 404, the story ↔ place links, the SEO title override, the Instagram fallback (timeout keeps the original link), the error boundary, and the admin in Arabic RTL without touching the public language preference.
+- `tests/admin.test.tsx`: the real dashboard against a mocked Supabase client.
+  - Actionable warnings link to filtered lists.
+  - Non-admins are refused.
+  - Verified coordinates without a source are blocked; with a source the entry saves as "needs review".
+  - Editing the Arabic translation and previewing.
+  - Duplicate featured positions are rejected.
+  - Arabic RTL layout.
+  - SVG uploads are rejected.
+- `tests/db/rls.test.ts` (**real PostgreSQL**):
+  - an anonymous visitor sees published content only and can't write or read admins or history;
+  - a non-admin can't update anything, can't make themselves admin and can't upload;
+  - an admin can write, can't spoof audit columns, and has changes recorded in history;
+  - delegation identifiers are immutable;
+  - the coordinate, metric, featured, URL, media-path, cover-permission and story rules all hold.
 
-## Architecture notes
+**Manual browser QA** (Vite dev server, built-in browser, mobile 375 px and the desktop pane):
+- Ben Arous map fit, cluster click zooming in, pin preview and focus.
+- Arabic RTL on public pages and the admin.
+- The admin setup screen.
+- To exercise pins visually, I temporarily gave the seed **test coordinates** and restored the original file straight away. A check confirmed no test values remain, and all six places are still `unverified`.
 
-- The public site reads one small "catalog" (all published content) on start, from Supabase or the bundled seed. Map, admin and detail views are lazy-loaded chunks.
-- Geometry is never stored in or edited through the database. It's served read-only from `public/geo`, extracted and validated from Map Tunisia by `npm run geo:build`.
-- Delegations are joined by Map Tunisia id / INS code, never by name. Social posts link to locations only through explicit IDs.
-- The nested `map-data/map-tunisia` clone was being tracked as a broken gitlink (a submodule entry without `.gitmodules`). The index entry was removed with `git rm --cached` (the files on disk are untouched) and the folder is now in `.gitignore`. That removal is **staged, not committed**.
+**Not tested:**
+- Anything on a live Supabase project (real sign-in, uploads to real storage, real RLS on Supabase's servers).
+- The real GitHub Pages deployment.
+- Real devices; screen-reader runs beyond the automated role and label checks.
+- Desktop-width screenshots: the browser tool crops them, so desktop layout was checked through the page structure.
 
-## Licensing obligations
+## 3. What needs your credentials
 
-- **ODbL 1.0 (map data)**: keep "Map data © OpenStreetMap contributors · Map Tunisia by Alaa Taieb" visible wherever the map appears (already in the Leaflet attribution and on the About page). Keep `public/geo/LICENSE-DATA.md`. Anyone who publishes a modified version of the GeoJSON must release it under the ODbL.
-- **Map Tunisia code (MIT)**: no Map Tunisia code is bundled. Only its data is used.
-- **Fonts (OFL)**: loaded from Google Fonts.
-- **Instagram**: embeds through Meta's official script, links to the originals, no downloading or re-hosting.
-- **Images uploaded later**: record the credit and permission for each. Images with permission "unknown" are hidden from the public.
+1. **Supabase project:** run the 2 migrations, `seed.sql` and `verify.sql`; set Auth settings; create the first admin. See [BACKEND_SETUP.md](BACKEND_SETUP.md).
+2. **GitHub repository:** enable Pages (Source: GitHub Actions) and set the variables `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (optionally `SITE_URL` and `PAGES_BASE_PATH`). See [DEPLOYMENT.md](DEPLOYMENT.md). Pushing is your call.
+3. **Optional Meta app** for automatic Instagram metrics: an architecture is documented in [INSTAGRAM.md](INSTAGRAM.md); it isn't built, because it needs your Meta account.
+4. **Optional tile provider** if a street basemap is wanted. See DEPLOYMENT.md.
+
+## 4. What needs real-world content or owner verification
+
+- **Positions:** none of the 6 places has a verified position, so **the map shows no pins** until real coordinates are entered with a source.
+- **Missing content:** descriptions, stories, categories and photos (with credit and permission) for all 6 places.
+- **Four town-level posts** ("Hammam Lif", "Rades", "Hammam Chat", "Ezzahra") are linked to their delegation only and carry review notes.
+- **Spellings:** the data uses Mohamedia, Fouchana, Hammam Chott and Radès; your list has Mohammedia, Fouchena, Hammam Chat and Rades. The labels can be edited under Admin → Delegations.
+- **Translation review:** the FR and AR mission, vision and UI copy, and the new FR/AR admin copy, should get a native-speaker review (especially the Arabic).
+- **Featured posts:** choosing the 5 featured posts is an editorial decision for you.
+
+## 5. Security and licensing notes
+
+- No secrets in the repository: a scan found only `.env.example` with placeholders. The service-role key is never used by the frontend or CI.
+- The public bucket means anyone with an image URL can view that image, which is intended for published photos. Don't upload private images there.
+- The admin sees a "not an administrator" screen, but real protection is the database (RLS + grants), and that is tested.
+- **ODbL:** keep the "Map data © OpenStreetMap contributors · Map Tunisia by Alaa Taieb" credit (on every map and the About page) and `public/geo/LICENSE-DATA.md`. `public/geo/*.geojson` and `src/data/governorates.json` are derived databases under ODbL.
+- Fonts are OFL. Instagram content is embedded and linked only, never re-hosted.
+
+## 6. Launch-readiness assessment
+
+**Technically ready to deploy.** The public site, maps, translations, CMS, security model, tests and deployment pipeline are complete and verified locally.
+
+**Not yet ready for a public launch.** The remaining work is mainly content and account setup, not code:
+1. Connect Supabase and confirm `verify.sql` passes on the live project.
+2. Deploy to GitHub Pages and test admin sign-in on the deployed URL.
+3. Add verified coordinates, descriptions and credited photos for at least the 6 launch places, so the map and cards aren't empty.
+4. Get native-speaker review of the FR and AR copy.
+
+After these four steps the platform can launch.

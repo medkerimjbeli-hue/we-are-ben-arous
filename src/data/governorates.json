@@ -1,0 +1,170 @@
+[
+  {
+    "id": "TN-11",
+    "ins_code": "11",
+    "name_en": "Tunis",
+    "name_fr": "Tunis",
+    "name_ar": "تونس"
+  },
+  {
+    "id": "TN-12",
+    "ins_code": "12",
+    "name_en": "Ariana",
+    "name_fr": "Ariana",
+    "name_ar": "أريانة"
+  },
+  {
+    "id": "TN-13",
+    "ins_code": "13",
+    "name_en": "Ben Arous",
+    "name_fr": "Ben Arous",
+    "name_ar": "بن عروس"
+  },
+  {
+    "id": "TN-14",
+    "ins_code": "14",
+    "name_en": "Manouba",
+    "name_fr": "La Manouba",
+    "name_ar": "منوبة"
+  },
+  {
+    "id": "TN-21",
+    "ins_code": "15",
+    "name_en": "Nabeul",
+    "name_fr": "Nabeul",
+    "name_ar": "نابل"
+  },
+  {
+    "id": "TN-22",
+    "ins_code": "16",
+    "name_en": "Zaghouan",
+    "name_fr": "Zaghouan",
+    "name_ar": "زغوان"
+  },
+  {
+    "id": "TN-23",
+    "ins_code": "17",
+    "name_en": "Bizerte",
+    "name_fr": "Bizerte",
+    "name_ar": "بنزرت"
+  },
+  {
+    "id": "TN-31",
+    "ins_code": "21",
+    "name_en": "Béja",
+    "name_fr": "Béja",
+    "name_ar": "باجة"
+  },
+  {
+    "id": "TN-32",
+    "ins_code": "22",
+    "name_en": "Jendouba",
+    "name_fr": "Jendouba",
+    "name_ar": "جندوبة"
+  },
+  {
+    "id": "TN-33",
+    "ins_code": "23",
+    "name_en": "Kef",
+    "name_fr": "Le Kef",
+    "name_ar": "الكاف"
+  },
+  {
+    "id": "TN-34",
+    "ins_code": "24",
+    "name_en": "Siliana",
+    "name_fr": "Siliana",
+    "name_ar": "سليانة"
+  },
+  {
+    "id": "TN-51",
+    "ins_code": "31",
+    "name_en": "Sousse",
+    "name_fr": "Sousse",
+    "name_ar": "سوسة"
+  },
+  {
+    "id": "TN-52",
+    "ins_code": "32",
+    "name_en": "Monastir",
+    "name_fr": "Monastir",
+    "name_ar": "المنستير"
+  },
+  {
+    "id": "TN-53",
+    "ins_code": "33",
+    "name_en": "Mahdia",
+    "name_fr": "Mahdia",
+    "name_ar": "المهدية"
+  },
+  {
+    "id": "TN-61",
+    "ins_code": "34",
+    "name_en": "Sfax",
+    "name_fr": "Sfax",
+    "name_ar": "صفاقس"
+  },
+  {
+    "id": "TN-41",
+    "ins_code": "41",
+    "name_en": "Kairouan",
+    "name_fr": "Kairouan",
+    "name_ar": "القيروان"
+  },
+  {
+    "id": "TN-42",
+    "ins_code": "42",
+    "name_en": "Kasserine",
+    "name_fr": "Kasserine",
+    "name_ar": "القصرين"
+  },
+  {
+    "id": "TN-43",
+    "ins_code": "43",
+    "name_en": "Sidi Bouzid",
+    "name_fr": "Sidi Bouzid",
+    "name_ar": "سيدي بوزيد"
+  },
+  {
+    "id": "TN-81",
+    "ins_code": "51",
+    "name_en": "Gabès",
+    "name_fr": "Gabès",
+    "name_ar": "قابس"
+  },
+  {
+    "id": "TN-82",
+    "ins_code": "52",
+    "name_en": "Medenine",
+    "name_fr": "Médenine",
+    "name_ar": "مدنين"
+  },
+  {
+    "id": "TN-83",
+    "ins_code": "53",
+    "name_en": "Tataouine",
+    "name_fr": "Tataouine",
+    "name_ar": "تطاوين"
+  },
+  {
+    "id": "TN-71",
+    "ins_code": "61",
+    "name_en": "Gafsa",
+    "name_fr": "Gafsa",
+    "name_ar": "قفصة"
+  },
+  {
+    "id": "TN-72",
+    "ins_code": "62",
+    "name_en": "Tozeur",
+    "name_fr": "Tozeur",
+    "name_ar": "توزر"
+  },
+  {
+    "id": "TN-73",
+    "ins_code": "63",
+    "name_en": "Kebili",
+    "name_fr": "Kébili",
+    "name_ar": "قبلي"
+  }
+]

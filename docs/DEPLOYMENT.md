@@ -54,3 +54,27 @@ No code changes are needed: the base path, canonical URLs, sitemap and Open Grap
 ## SEO files
 
 `robots.txt` is always generated and blocks `/admin`. `sitemap.xml`, canonical and `hreflang` tags are added only when `SITE_URL` (or the Pages URL in CI) is known. Search engines only read `robots.txt` at the domain root, so on a project site (`user.github.io/repo/`) it's ignored until you move to a custom domain.
+
+## Base maps and tile providers
+
+The site draws only **vector boundaries** from Map Tunisia (ODbL). It loads no raster map tiles, so it doesn't break any tile server's usage policy and has no tile costs. `tile.openstreetmap.org` must **not** be used for a production site, under the [OSM tile usage policy](https://operations.osmfoundation.org/policies/tiles/).
+
+If streets or a satellite background are wanted later:
+- **Hosted:** use a commercial provider with a free tier and a proper licence, such as MapTiler, Stadia Maps or Thunderforest. Put its **public, domain-restricted** key in a `VITE_*` variable, add the tile layer in `src/features/map/MapView.tsx`, and keep the provider's attribution next to the OSM one.
+- **Self-hosted:** generate a Tunisia extract as [Protomaps PMTiles](https://protomaps.com) and serve that single file from the same static host.
+
+## Caching
+
+- Vite fingerprints every JS and CSS file (`assets/*-<hash>.js`), so browsers can cache them indefinitely. GitHub Pages sends `Cache-Control: max-age=600` on everything and can't be configured.
+- After a deploy, a visitor whose open tab still references old chunks gets the error boundary, which offers to reload the page.
+- Uploaded images are stored with `Cache-Control: max-age=31536000` (each upload gets a new UUID path, so it's never overwritten).
+- On a custom host, serve `/assets/*` with `Cache-Control: public, max-age=31536000, immutable` and `index.html` with `no-cache`.
+
+## Pre-launch checklist
+
+1. `npm run geo:validate`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run db:verify` and `npm run build` all pass (CI runs them on every push).
+2. The Supabase migrations, seed and `verify.sql` print `ALL CHECKS PASSED` on the live project.
+3. The repository variables `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set; the service-role key is **not** in GitHub.
+4. The Supabase Auth Site URL and redirect URLs point at the Pages URL, and sign-ups are disabled.
+5. The first admin can sign in, and a non-admin sees "Access denied".
+6. Content verification is done (see `docs/IMPLEMENTATION_REPORT.md` → "Owner verification").

@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "test": "vitest run",
     "geo:build": "node scripts/geo/build.mjs",
-    "geo:validate": "node scripts/geo/validate.mjs"
+    "geo:validate": "node scripts/geo/validate.mjs",
+    "db:verify": "node scripts/db-verify-local.mjs",
+    "seed:sql": "node scripts/generate-seed-sql.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",
@@ -24,6 +26,7 @@
     "react-router-dom": "^7.18.7"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.6.0",
     "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.3.5",
     "@testing-library/jest-dom": "^8.0.0",

@@ -1,5 +1,7 @@
 # Content guide (for administrators)
 
+The dashboard is available in **English, French and Arabic**; change the language in the sidebar (or on the sign-in card). Content is always edited in all three languages, whatever the dashboard language.
+
 Sign in at `/admin`. Everything you publish appears on the public site immediately, in all three languages.
 
 ## Publication workflow
@@ -20,10 +22,13 @@ Use **Preview** in the location editor to see the public page before publishing.
 - **Name, short description, story, address**: edited in English, French and Arabic using the tabs. A red dot marks a missing translation. Visitors see a fallback language with a notice. Don't publish machine translations of historical facts as verified; keep them in *Needs review* until checked.
 - **Category**: optional. Only assign one when it's supported by real information. Manage the list under **Categories**.
 - **Map position**: enter latitude/longitude **only from a verified source** (on-site GPS, owner confirmation, official record). Set *Verification status = Verified* and describe the source. **Pins appear on the map only for verified positions.** Never estimate coordinates from a place name.
+- **Community stories** can say which place they're about ("This story is about"). The place page then lists them under "Related stories", and the map preview links to them.
+- **SEO title / description** (optional): used for Google results and social-media previews. If empty, the name and short description are used.
+- **Edit history**: every save is recorded by the database. You'll find it at the bottom of each editor and under **Edit history**.
 - **Highlight on homepage**: puts the place first in the homepage "Discoveries" grid.
 - **Source & verification notes**: internal only, never shown publicly.
 
-The editor lists **errors** (which block saving) and **warnings** (missing translation, no image, unverified position, missing photo credit). The dashboard collects all warnings in one place.
+The editor lists **errors** (which block saving) and **warnings** (missing translation or description, no photo, unverified position, missing photo credit, no category). The dashboard's **What needs attention** list counts each kind; click one to open the filtered list and fix the items one by one.
 
 ## Instagram posts and Reels
 

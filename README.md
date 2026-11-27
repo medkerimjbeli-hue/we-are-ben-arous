@@ -32,8 +32,9 @@ To connect a backend, copy `.env.example` to `.env.local` and fill in the **publ
 | `npm run build` | Type-check + production build into `dist/` (+ 404.html, robots, sitemap) |
 | `npm run preview` | Serve the production build locally |
 | `npm run geo:validate` | Validate the derived GeoJSON in `public/geo` |
+| `npm run db:verify` | Apply every Supabase migration + seed to an in-memory PostgreSQL (PGlite) and run `supabase/verify.sql` |
 | `npm run geo:build` | Re-extract `public/geo` from a local Map Tunisia clone |
-| `node scripts/generate-seed-sql.mjs` | Regenerate `supabase/seed.sql` from `src/data/seed.json` |
+| `npm run seed:sql` | Regenerate `supabase/seed.sql` from `src/data/seed.json` |
 
 ## Project layout
 
@@ -53,7 +54,7 @@ src/
 public/geo/       derived Map Tunisia data (ODbL) + licence
 supabase/         migrations (schema, RLS, storage) and seed.sql
 scripts/          geo extraction/validation, seed SQL, postbuild
-tests/            Vitest suites
+tests/            Vitest suites (unit, UI, mocked-admin, and real-PostgreSQL RLS tests in tests/db)
 docs/             deployment, backend, content guide, implementation report
 ```
 
@@ -66,6 +67,7 @@ docs/             deployment, backend, content guide, implementation report
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): GitHub Pages and custom domain
 - [docs/BACKEND_SETUP.md](docs/BACKEND_SETUP.md): Supabase, RLS, storage and the first administrator
 - [docs/CONTENT_GUIDE.md](docs/CONTENT_GUIDE.md): how to manage content in the dashboard
+- [docs/INSTAGRAM.md](docs/INSTAGRAM.md): Instagram embeds, featured posts and the optional metrics integration
 - [docs/IMPLEMENTATION_REPORT.md](docs/IMPLEMENTATION_REPORT.md): what's done, test results, limitations, data to verify
 
 ## Credits & licences

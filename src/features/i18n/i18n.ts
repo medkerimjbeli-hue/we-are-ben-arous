@@ -3,10 +3,14 @@ import { initReactI18next } from 'react-i18next';
 import en from './locales/en';
 import fr from './locales/fr';
 import ar from './locales/ar';
+import adminEn from './locales/admin.en';
+import adminFr from './locales/admin.fr';
+import adminAr from './locales/admin.ar';
 import { LANGS, type Lang } from '../../types';
 
 export const DEFAULT_LANG: Lang = 'en';
 export const LANG_STORAGE_KEY = 'wab.lang';
+export const ADMIN_LANG_STORAGE_KEY = 'wab.adminLang';
 export const isLang = (v: unknown): v is Lang => typeof v === 'string' && (LANGS as readonly string[]).includes(v);
 export const dirFor = (lang: Lang) => (lang === 'ar' ? 'rtl' : 'ltr');
 
@@ -29,7 +33,11 @@ export function applyLang(lang: Lang) {
 }
 
 void i18n.use(initReactI18next).init({
-  resources: { en: { translation: en }, fr: { translation: fr }, ar: { translation: ar } },
+  resources: {
+    en: { translation: { ...en, admin: adminEn } },
+    fr: { translation: { ...fr, admin: adminFr } },
+    ar: { translation: { ...ar, admin: adminAr } },
+  },
   lng: DEFAULT_LANG,
   fallbackLng: { ar: ['fr', 'en'], fr: ['en'], default: ['en'] },
   interpolation: { escapeValue: false },

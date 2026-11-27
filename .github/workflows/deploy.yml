@@ -29,7 +29,9 @@ jobs:
       - run: npm ci
       - run: npm run geo:validate
       - run: npm run lint
+      - run: npm run typecheck
       - run: npm test
+      - run: npm run db:verify
       - name: Build
         run: npm run build
         env:

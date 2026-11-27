@@ -1,6 +1,6 @@
 // Converts between Supabase rows (snake_case) and app types (camelCase).
 import type { Category, Delegation, Location, Media, SocialPost } from '../types';
-import { MEDIA_BUCKET, supabase } from '../lib/supabase';
+import { mediaPublicUrl } from '../lib/config';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Row = Record<string, any>;
@@ -15,6 +15,7 @@ export const toLocation = (r: Row): Location => ({
   name: r.name ?? {}, summary: r.summary ?? {}, story: r.story ?? {}, address: r.address ?? {},
   lat: r.lat, lng: r.lng, coordinateStatus: r.coordinate_status, coordinateSource: r.coordinate_source,
   coverMediaId: r.cover_media_id, status: r.status, featured: r.featured, sourceNotes: r.source_notes,
+  seoTitle: r.seo_title ?? {}, seoDescription: r.seo_description ?? {}, placeId: r.place_id ?? null,
   createdAt: r.created_at, updatedAt: r.updated_at,
 });
 export const fromLocation = (l: Location): Row => ({
@@ -22,6 +23,7 @@ export const fromLocation = (l: Location): Row => ({
   name: l.name, summary: l.summary, story: l.story, address: l.address, lat: l.lat, lng: l.lng,
   coordinate_status: l.coordinateStatus, coordinate_source: l.coordinateSource, cover_media_id: l.coverMediaId,
   status: l.status, featured: l.featured, source_notes: l.sourceNotes,
+  seo_title: l.seoTitle, seo_description: l.seoDescription, place_id: l.kind === 'story' ? l.placeId : null,
 });
 export const toSocialPost = (r: Row): SocialPost => ({
   id: r.id, url: r.url, label: r.label, delegationId: r.delegation_id, locationId: r.location_id,
@@ -35,11 +37,7 @@ export const fromSocialPost = (p: SocialPost): Row => ({
   metric_verified_at: p.metricVerifiedAt, status: p.status, featured: p.featured, featured_rank: p.featuredRank,
   sort_order: p.sortOrder, review_note: p.reviewNote,
 });
-export function mediaUrl(path: string): string {
-  if (/^https?:\/\//.test(path)) return path;
-  if (!supabase) return '';
-  return supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;
-}
+export const mediaUrl = mediaPublicUrl;
 export const toMedia = (r: Row): Media => ({
   id: r.id, path: r.path, url: mediaUrl(r.path), alt: r.alt ?? {}, credit: r.credit, sourceUrl: r.source_url,
   permission: r.permission, locationId: r.location_id, createdAt: r.created_at,

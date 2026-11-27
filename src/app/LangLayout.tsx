@@ -6,6 +6,7 @@ import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { Loading, ErrorState } from '../components/States';
 import { useCatalog } from '../data/CatalogProvider';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
 /** Validates the :lang segment, applies language + direction, and renders the public chrome. */
 export function LangLayout() {
@@ -23,7 +24,7 @@ export function LangLayout() {
       <Header />
       <main id="main" tabIndex={-1} className="outline-none">
         {error ? <ErrorState onRetry={reload} /> : loading ? <Loading /> : (
-          <Suspense fallback={<Loading />}><Outlet /></Suspense>
+          <ErrorBoundary resetKey={pathname}><Suspense fallback={<Loading />}><Outlet /></Suspense></ErrorBoundary>
         )}
       </main>
       <Footer />

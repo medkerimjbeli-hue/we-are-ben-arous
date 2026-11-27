@@ -1,7 +1,7 @@
 -- We Are Ben Arous — initial schema, Row Level Security and storage.
 -- Apply with `supabase db push` or paste into the Supabase SQL editor.
 
-create extension if not exists pgcrypto;
+-- gen_random_uuid() is built into PostgreSQL 13+ (no extension needed).
 
 -- ---------------------------------------------------------------- enums
 do $$ begin

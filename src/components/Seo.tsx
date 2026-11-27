@@ -19,7 +19,7 @@ function setLink(rel: string, href: string | null, hreflang?: string) {
 }
 
 /** Sets localized title, description, Open Graph/Twitter tags and (when the public URL is known) canonical + hreflang. */
-export function Seo({ title, description, image }: { title?: string; description?: string; image?: string | null }) {
+export function Seo({ title, description, image, type = 'website', noindex = false }: { title?: string; description?: string; image?: string | null; type?: 'website' | 'article'; noindex?: boolean }) {
   const { t, i18n } = useTranslation();
   const { pathname } = useLocation();
   useEffect(() => {
@@ -29,6 +29,8 @@ export function Seo({ title, description, image }: { title?: string; description
     setMeta('name', 'description', desc);
     setMeta('property', 'og:title', full);
     setMeta('property', 'og:description', desc);
+    setMeta('property', 'og:type', type);
+    setMeta('name', 'robots', noindex ? 'noindex, nofollow' : 'index, follow');
     setMeta('property', 'og:locale', { en: 'en_US', fr: 'fr_FR', ar: 'ar_TN' }[i18n.language] ?? 'en_US');
     const img = image || asset('og-image.jpg');
     setMeta('property', 'og:image', SITE_URL && img.startsWith('/') ? `${new URL(SITE_URL).origin}${img}` : img);
@@ -40,6 +42,6 @@ export function Seo({ title, description, image }: { title?: string; description
       setMeta('property', 'og:url', `${SITE_URL}${pathname}`);
       for (const l of ['en', 'fr', 'ar']) setLink('alternate', `${SITE_URL}/${l}${rest}`, l);
     }
-  }, [title, description, image, t, i18n.language, pathname]);
+  }, [title, description, image, type, noindex, t, i18n.language, pathname]);
   return null;
 }

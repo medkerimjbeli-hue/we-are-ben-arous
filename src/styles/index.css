@@ -10,6 +10,10 @@
   --color-text-main: #FFFFFF;
   --color-text-muted: #A6A6A6;
   --color-border: #303030;
+  /* Accessibility tints of the brand red (WCAG AA 4.5:1). #F0002E stays the brand colour for
+     fills, borders, map highlights and large text; these are used only where small text is involved. */
+  --color-primary-button: #E0002B; /* white text on it: 4.99:1 (white on #F0002E is 4.43:1) */
+  --color-primary-text: #FF3355;   /* on #151515 cards: 5.09:1 (#F0002E is 4.13:1) */
   color-scheme: dark;
 }
 
@@ -54,8 +58,8 @@ h1, h2, h3, h4, .font-display { font-family: var(--font-display); }
 }
 
 .btn { display: inline-flex; align-items: center; gap: .5rem; border-radius: 999px; padding: .75rem 1.35rem; font-family: var(--font-display); font-weight: 700; font-size: .95rem; transition: background .2s, color .2s, border-color .2s, transform .2s; min-height: 44px; }
-.btn-primary { background: var(--color-primary); color: #fff; }
-.btn-primary:hover { background: #ff1a45; }
+.btn-primary { background: var(--color-primary-button); color: #fff; }
+.btn-primary:hover { background: #C80026; }
 .btn-ghost { border: 1px solid var(--color-border); color: #fff; }
 .btn-ghost:hover { border-color: #fff; }
 .card { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 1.25rem; }
@@ -65,19 +69,23 @@ h1, h2, h3, h4, .font-display { font-family: var(--font-display); }
 .label { display: block; font-size: .8rem; font-weight: 600; color: var(--color-text-muted); margin-bottom: .35rem; }
 
 /* Leaflet */
-.leaflet-container { background: #0b0b0b !important; font-family: var(--font-sans); }
-.leaflet-container .leaflet-control-attribution { background: rgb(8 8 8 / .8); color: var(--color-text-muted); font-size: 11px; }
-.leaflet-container .leaflet-control-attribution a { color: #fff; }
+.leaflet-container { background: #0b0b0b !important; font-family: var(--font-sans) !important; }
+.leaflet-container .leaflet-control-attribution { background: rgb(8 8 8 / .8) !important; color: var(--color-text-muted) !important; font-size: 11px !important; }
+.leaflet-container .leaflet-control-attribution a { color: #fff !important; }
 .leaflet-interactive:focus { outline: none; }
 path.leaflet-interactive:focus-visible { stroke: #fff; stroke-width: 3; }
-.wab-label { background: transparent; border: 0; box-shadow: none; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 11px; text-shadow: 0 1px 3px #000, 0 0 8px #000; white-space: nowrap; }
-.wab-label::before { display: none; }
-.wab-callout span { position: absolute; transform: translate(calc(-100% - 10px), -50%); display: inline-block; white-space: nowrap; background: var(--color-primary); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 999px; box-shadow: 0 6px 20px rgb(0 0 0 / .5); }
+.leaflet-tooltip.wab-label { background: transparent; border: 0; box-shadow: none; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 11px; text-shadow: 0 1px 3px #000, 0 0 8px #000; white-space: nowrap; }
+.leaflet-tooltip.wab-label::before { display: none; }
+.wab-callout span { position: absolute; transform: translate(calc(-100% - 10px), -50%); display: inline-block; white-space: nowrap; background: var(--color-primary-button); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 999px; box-shadow: 0 6px 20px rgb(0 0 0 / .5); }
 .wab-pin { display: grid; place-items: center; }
-.wab-pin span { width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--color-primary); border: 2px solid #fff; box-shadow: 0 4px 14px rgb(240 0 46 / .55); transition: transform .15s, background .15s; }
+.wab-pin span { position: relative; display: block; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--color-primary); border: 2px solid #fff; box-shadow: 0 4px 14px rgb(240 0 46 / .55); transition: transform .15s, background .15s; }
 .wab-pin span::after { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: #fff; }
 .wab-pin:hover span, .wab-pin:focus-visible span, .wab-pin.is-selected span { transform: rotate(-45deg) scale(1.2); background: #fff; }
 .wab-pin.is-selected span::after { background: var(--color-primary); }
+
+.wab-pin-story span { background: var(--color-accent); }
+.wab-cluster span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--color-primary-button); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 15px; border: 3px solid #fff; box-shadow: 0 0 0 6px rgb(240 0 46 / .3), 0 6px 20px rgb(0 0 0 / .5); transition: transform .15s; }
+.wab-cluster:hover span, .wab-cluster:focus-visible span { transform: scale(1.1); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
@@ -85,3 +93,8 @@ path.leaflet-interactive:focus-visible { stroke: #fff; stroke-width: 3; }
 
 @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 .rise { animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; }
+
+/* Red text uses the accessible tint (see :root). Declared in the utilities layer so it overrides Tailwind's generated rule. */
+@layer utilities {
+  .text-primary { color: var(--color-primary-text); }
+}

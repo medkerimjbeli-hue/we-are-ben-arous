@@ -17,7 +17,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
     <div role="group" aria-label={t('nav.language')} className={`flex items-center gap-1 rounded-full border border-line p-1 ${className}`}>
       {LANGS.map((l) => (
         <button key={l} type="button" lang={l} onClick={() => go(l)} aria-pressed={l === lang} aria-label={FULL[l]}
-          className={`min-h-9 min-w-10 rounded-full px-2.5 text-xs font-bold transition ${l === lang ? 'bg-primary text-white' : 'text-muted hover:text-white'}`}>
+          className={`min-h-9 min-w-10 rounded-full px-2.5 text-xs font-bold transition ${l === lang ? 'bg-[var(--color-primary-button)] text-white' : 'text-muted hover:text-white'}`}>
           {LABEL[l]}
         </button>
       ))}

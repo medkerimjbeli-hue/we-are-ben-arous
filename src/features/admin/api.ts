@@ -1,13 +1,23 @@
-import type { Catalog, Category, Delegation, Location, Media, SocialPost } from '../../types';
+import type { Catalog, Category, Delegation, Location, Media, Revision, SocialPost } from '../../types';
 import { MEDIA_BUCKET, supabase } from '../../lib/supabase';
 import { fromLocation, fromSocialPost, toCategory, toDelegation, toLocation, toMedia, toSocialPost } from '../../data/mappers';
+import { uploadIssue } from './validation';
+
+/** Error whose message is a translation key under admin.* when `key` is set. */
+export class AdminError extends Error {
+  constructor(message: string, public key?: string) { super(message); }
+}
 
 function db() {
-  if (!supabase) throw new Error('Supabase is not configured.');
+  if (!supabase) throw new AdminError('Supabase is not configured.', 'auth.notConfiguredTitle');
   return supabase;
 }
-function check<T>(r: { data: T; error: { message: string } | null }): NonNullable<T> {
-  if (r.error) throw new Error(r.error.message);
+function check<T>(r: { data: T; error: { message: string; code?: string } | null }): NonNullable<T> {
+  if (r.error) {
+    // 42501 = insufficient_privilege (RLS / missing grant)
+    if (r.error.code === '42501' || /row-level security|permission denied/i.test(r.error.message)) throw new AdminError(r.error.message, 'errors.rls');
+    throw new AdminError(r.error.message);
+  }
   return r.data as NonNullable<T>;
 }
 
@@ -51,13 +61,17 @@ export async function saveDelegation(d: Delegation) {
   check(await db().from('delegations').update({ name: d.name, slug: d.slug, status: d.status }).eq('id', d.id));
 }
 
+const EXT: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/avif': 'avif' };
+
 export async function uploadMedia(file: File, meta: Pick<Media, 'alt' | 'credit' | 'sourceUrl' | 'permission' | 'locationId'>) {
-  const ext = file.name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
-  const path = `${new Date().toISOString().slice(0, 7)}/${crypto.randomUUID()}.${ext}`;
-  check(await db().storage.from(MEDIA_BUCKET).upload(path, file, { contentType: file.type, upsert: false }));
+  const bad = uploadIssue(file);
+  if (bad) throw new AdminError(bad, `media.${bad}`);
+  // Path format is enforced by the database (media_path_format): YYYY-MM/<uuid>.<ext>
+  const path = `${new Date().toISOString().slice(0, 7)}/${crypto.randomUUID()}.${EXT[file.type]}`;
+  check(await db().storage.from(MEDIA_BUCKET).upload(path, file, { contentType: file.type, upsert: false, cacheControl: '31536000' }));
   const row = { path, alt: meta.alt, credit: meta.credit, source_url: meta.sourceUrl, permission: meta.permission, location_id: meta.locationId };
   const r = await db().from('media').insert(row).select().single();
-  if (r.error) { await db().storage.from(MEDIA_BUCKET).remove([path]); throw new Error(r.error.message); }
+  if (r.error) { await db().storage.from(MEDIA_BUCKET).remove([path]); check(r); }
   return toMedia(r.data);
 }
 export async function updateMedia(m: Media) {
@@ -66,4 +80,13 @@ export async function updateMedia(m: Media) {
 export async function deleteMedia(m: Media) {
   check(await db().from('media').delete().eq('id', m.id));
   if (!/^https?:/.test(m.path)) await db().storage.from(MEDIA_BUCKET).remove([m.path]);
+}
+
+/** Latest revisions, optionally for one record. Returns null if the history table is not installed yet. */
+export async function loadRevisions(recordId?: string, limit = 100): Promise<Revision[] | null> {
+  let q = db().from('content_revisions').select('*').order('id', { ascending: false }).limit(limit);
+  if (recordId) q = q.eq('record_id', recordId);
+  const r = await q;
+  if (r.error) { if (/does not exist|schema cache/i.test(r.error.message)) return null; check(r); }
+  return (r.data ?? []).map((x) => ({ id: x.id, tableName: x.table_name, recordId: x.record_id, action: x.action, changedBy: x.changed_by, changedAt: x.changed_at, snapshot: x.snapshot }));
 }

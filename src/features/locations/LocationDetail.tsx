@@ -5,7 +5,7 @@ import { ArrowLeft, Check, Link2, MapPin, MapPinOff, Share2 } from 'lucide-react
 import type { Catalog, Location } from '../../types';
 import { pick, tr } from '../../lib/localize';
 import { useLang } from '../../hooks/useLang';
-import { categoryById, delegationById, hasVerifiedCoords, locationsInDelegation, mediaById, postsForLocation } from '../../data/selectors';
+import { categoryById, delegationById, hasVerifiedCoords, locationsInDelegation, mediaById, postsForLocation, storiesForPlace } from '../../data/selectors';
 import { InstagramEmbed } from '../instagram/InstagramEmbed';
 import { LocationCard } from './LocationCard';
 
@@ -21,7 +21,9 @@ export function LocationDetail({ location: l, catalog: c, preview = false }: { l
   const cover = mediaById(c, l.coverMediaId);
   const gallery = c.media.filter((m) => m.locationId === l.id && m.id !== l.coverMediaId);
   const posts = postsForLocation(c, l.id);
-  const related = d ? locationsInDelegation(c, d.id).filter((x) => x.id !== l.id).slice(0, 3) : [];
+  const stories = storiesForPlace(c, l.id);
+  const aboutPlace = l.kind === 'story' && l.placeId ? c.locations.find((x) => x.id === l.placeId) ?? null : null;
+  const related = d ? locationsInDelegation(c, d.id).filter((x) => x.id !== l.id && !stories.includes(x)).slice(0, 3) : [];
   const summary = pick(l.summary, lang), story = pick(l.story, lang), name = tr(l.name, lang);
   const fallbackNote = (used: string | null) => used && used !== lang
     ? <p className="mb-2 text-xs text-muted">{t('common.translationFallback', { lang: t(`common.langNames.${used}`) })}</p> : null;
@@ -54,6 +56,11 @@ export function LocationDetail({ location: l, catalog: c, preview = false }: { l
             {cat && <span className="chip">{tr(cat.name, lang)}</span>}
           </div>
           <h1 className="text-4xl font-extrabold sm:text-6xl" dir="auto">{name}</h1>
+          {aboutPlace && (
+            <p className="mt-3 text-muted">{t('place.aboutPlace')}{' '}
+              <Link to={to(`places/${aboutPlace.slug}`)} className="font-semibold text-white underline decoration-primary underline-offset-4" dir="auto">{tr(aboutPlace.name, lang)}</Link>
+            </p>
+          )}
           {tr(l.address, lang) && <p className="mt-3 text-muted" dir="auto">{tr(l.address, lang)}</p>}
           {!preview && (
             <button type="button" onClick={share} className="btn btn-ghost mt-6">
@@ -123,6 +130,12 @@ export function LocationDetail({ location: l, catalog: c, preview = false }: { l
         </aside>
       </div>
 
+      {!preview && stories.length > 0 && (
+        <section className="mx-auto mb-12 max-w-5xl px-4 sm:px-6">
+          <h2 className="mb-5 text-2xl font-extrabold">{t('place.relatedStories')}</h2>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{stories.map((r) => <LocationCard key={r.id} location={r} catalog={c} compact />)}</div>
+        </section>
+      )}
       {!preview && related.length > 0 && d && (
         <section className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="mb-5 text-2xl font-extrabold">{t('place.related', { name: tr(d.name, lang) })}</h2>

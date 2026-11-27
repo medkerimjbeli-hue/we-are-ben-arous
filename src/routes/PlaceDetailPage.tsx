@@ -15,7 +15,12 @@ export default function PlaceDetailPage() {
   if (!l) return <NotFoundPage />;
   return (
     <>
-      <Seo title={tr(l.name, lang)} description={tr(l.summary, lang) || undefined} image={mediaById(c, l.coverMediaId)?.url} />
+      <Seo
+        title={tr(l.seoTitle, lang) || tr(l.name, lang)}
+        description={tr(l.seoDescription, lang) || tr(l.summary, lang) || undefined}
+        image={mediaById(c, l.coverMediaId)?.url}
+        type="article"
+      />
       <LocationDetail location={l} catalog={c} />
     </>
   );

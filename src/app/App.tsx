@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CatalogProvider } from '../data/CatalogProvider';
 import { LangLayout, RootRedirect } from './LangLayout';
 import { Loading } from '../components/States';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import HomePage from '../routes/HomePage';
 
 const ExplorePage = lazy(() => import('../routes/ExplorePage'));
@@ -16,7 +17,7 @@ const AdminApp = lazy(() => import('../features/admin/AdminApp'));
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/admin/*" element={<Suspense fallback={<Loading />}><AdminApp /></Suspense>} />
+      <Route path="/admin/*" element={<ErrorBoundary><Suspense fallback={<Loading />}><AdminApp /></Suspense></ErrorBoundary>} />
       <Route path="/" element={<RootRedirect />} />
       <Route path="/:lang" element={<LangLayout />}>
         <Route index element={<HomePage />} />

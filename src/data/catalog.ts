@@ -1,6 +1,6 @@
 import type { Catalog } from '../types';
 import seed from './seed.json';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
+import { isSupabaseConfigured } from '../lib/config';
 import { toCategory, toDelegation, toLocation, toMedia, toSocialPost } from './mappers';
 
 export type PublicCatalog = Catalog & { source: 'supabase' | 'seed' };
@@ -21,7 +21,9 @@ export function seedCatalog(): Catalog {
 
 /** Loads public content. With Supabase, Row Level Security guarantees only published rows are returned. */
 export async function loadPublicCatalog(): Promise<PublicCatalog> {
-  if (!isSupabaseConfigured || !supabase) return { ...seedCatalog(), source: 'seed' };
+  if (!isSupabaseConfigured) return { ...seedCatalog(), source: 'seed' };
+  const { supabase } = await import('../lib/supabase');
+  if (!supabase) return { ...seedCatalog(), source: 'seed' };
   const [d, c, l, p, m] = await Promise.all([
     supabase.from('delegations').select('*').order('ins_code'),
     supabase.from('categories').select('*').order('sort_order'),

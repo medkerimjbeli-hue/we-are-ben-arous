@@ -3,14 +3,15 @@ import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight, Lock, MapPin, MapPinOff, Unlock } from 'lucide-react';
 import { useCatalog } from '../data/CatalogProvider';
-import { delegationById, delegationBySlug, delegationOnlyPosts, hasVerifiedCoords, locationsInDelegation, categoryById, mediaById } from '../data/selectors';
+import { delegationById, delegationBySlug, delegationOnlyPosts, hasVerifiedCoords, locationsInDelegation, categoryById, mediaById, storiesForPlace } from '../data/selectors';
 import { useLang } from '../hooks/useLang';
 import { tr } from '../lib/localize';
 import { Seo } from '../components/Seo';
 import { Dialog } from '../components/Dialog';
 import { Empty, Loading } from '../components/States';
 import { InstagramEmbed } from '../features/instagram/InstagramEmbed';
-import { AVAILABLE_GOVERNORATES, geoName, loadGovernorates, type GovFC } from '../features/map/geo';
+import { AVAILABLE_GOVERNORATES, geoName } from '../features/map/geo';
+import governorates from '../data/governorates.json';
 import NotFoundPage from './NotFoundPage';
 
 const MapView = lazy(() => import('../features/map/MapView'));
@@ -26,13 +27,13 @@ export default function ExplorePage() {
   const delegation = delegationSlug ? delegationBySlug(catalog, delegationSlug) : null;
   const [locked, setLocked] = useState<string | null>(null);
   const [pinId, setPinId] = useState<string | null>(null);
-  const [govs, setGovs] = useState<GovFC | null>(null);
-  useEffect(() => { loadGovernorates().then(setGovs).catch(() => setGovs(null)); }, []);
   useEffect(() => setPinId(null), [delegationSlug]);
 
+  const [categoryId, setCategoryId] = useState<string>('');
   const pins = useMemo(() => catalog.locations
-    .filter((l) => hasVerifiedCoords(l) && (!delegation || l.delegationId === delegation.id))
-    .map((l) => ({ id: l.id, lat: l.lat!, lng: l.lng!, label: tr(l.name, lang) })), [catalog, delegation, lang]);
+    .filter((l) => hasVerifiedCoords(l) && (!delegation || l.delegationId === delegation.id) && (!categoryId || l.categoryId === categoryId))
+    .map((l) => ({ id: l.id, lat: l.lat!, lng: l.lng!, label: tr(l.name, lang), kind: l.kind })), [catalog, delegation, lang, categoryId]);
+  const pinCategories = catalog.categories.filter((cat) => catalog.locations.some((l) => hasVerifiedCoords(l) && l.categoryId === cat.id));
   const pinned = pinId ? catalog.locations.find((l) => l.id === pinId) ?? null : null;
 
   if (delegationSlug && !delegation) return <NotFoundPage />;
@@ -51,7 +52,7 @@ export default function ExplorePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6">
       <Seo title={title} description={region ? t('map.regionLabel') : t('map.tunisiaLabel')} />
-      <nav aria-label="Breadcrumb" className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted">
+      <nav aria-label={t('nav.breadcrumb')} className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted">
         <Link to={to('explore')} className="hover:text-white">{t('map.tunisia')}</Link>
         {region && <><span aria-hidden>/</span><Link to={to('explore/ben-arous')} className="hover:text-white">{t('map.benArous')}</Link></>}
         {delegation && <><span aria-hidden>/</span><span className="text-white" aria-current="page">{tr(delegation.name, lang)}</span></>}
@@ -68,7 +69,19 @@ export default function ExplorePage() {
           {pinned && (
             <PinPreview locationId={pinned.id} onClose={() => setPinId(null)} />
           )}
-          {region && <p className="mt-3 text-xs text-muted">{t('map.pinsHint')}</p>}
+          {region && (
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-xs text-muted" role="status">{pins.length ? t('map.pinsCount', { count: pins.length }) : t('map.noPins')} · {t('map.pinsHint')}</p>
+              {pinCategories.length > 0 && (
+                <label className="flex items-center gap-2 text-xs text-muted">{t('search.category')}
+                  <select className="field !min-h-9 !w-auto !py-1 text-xs" value={categoryId} onChange={(e) => { setCategoryId(e.target.value); setPinId(null); }}>
+                    <option value="">{t('common.all')}</option>
+                    {pinCategories.map((cat) => <option key={cat.id} value={cat.id}>{tr(cat.name, lang)}</option>)}
+                  </select>
+                </label>
+              )}
+            </div>
+          )}
         </div>
 
         <aside aria-label={region ? t('map.delegations') : t('map.governorates')} className="card max-h-none p-5 lg:max-h-[72vh] lg:overflow-y-auto">
@@ -77,7 +90,7 @@ export default function ExplorePage() {
               <Link to={to('explore/ben-arous')} className="btn btn-primary mb-5 w-full justify-center">{t('map.enter')} <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden /></Link>
               <h2 className="mb-3 font-display text-sm font-bold uppercase tracking-wider text-muted">{t('map.governorates')} · {t('map.listAlternative')}</h2>
               <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-1">
-                {(govs?.features ?? []).map((f) => f.properties).sort((a, b) => a.ins_code.localeCompare(b.ins_code)).map((p) => {
+                {governorates.map((p) => {
                   const avail = AVAILABLE_GOVERNORATES.has(p.id), name = geoName(p, lang);
                   return (
                     <li key={p.id}>
@@ -173,27 +186,33 @@ function PinPreview({ locationId, onClose }: { locationId: string; onClose: () =
   const cat = categoryById(c, l.categoryId);
   const cover = mediaById(c, l.coverMediaId);
   const post = c.socialPosts.find((p) => p.locationId === l.id);
+  const stories = storiesForPlace(c, l.id);
   useEffect(() => {
     const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     document.addEventListener('keydown', k);
     return () => document.removeEventListener('keydown', k);
   }, [onClose]);
   return (
-    <section aria-label={tr(l.name, lang)} aria-live="polite" className="rise absolute inset-x-3 bottom-3 z-[500] card overflow-hidden shadow-2xl sm:inset-x-auto sm:end-3 sm:w-80">
+    <section aria-label={tr(l.name, lang)} aria-live="polite" className="rise absolute inset-x-3 bottom-8 z-[500] card overflow-hidden shadow-2xl sm:inset-x-auto sm:end-3 sm:w-80">
       {cover?.url && <img src={cover.url} alt={tr(cover.alt, lang)} className="aspect-[16/9] w-full object-cover" />}
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary">{d ? tr(d.name, lang) : ''}{cat ? ` · ${tr(cat.name, lang)}` : ''}</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary">{l.kind === 'story' ? t('place.story_kind') : t('place.place_kind')} · {d ? tr(d.name, lang) : ''}{cat ? ` · ${tr(cat.name, lang)}` : ''}</p>
             <h3 className="text-lg font-bold" dir="auto">{tr(l.name, lang)}</h3>
           </div>
-          <button type="button" onClick={onClose} aria-label={t('common.close')} className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line">×</button>
+          <button type="button" onClick={onClose} aria-label={t('common.close')} className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-line" autoFocus>×</button>
         </div>
         <p className="mt-2 line-clamp-3 text-sm text-muted" dir="auto">{tr(l.summary, lang) || t('common.comingSoon')}</p>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Link to={to(`places/${l.slug}`)} className="btn btn-primary !py-2 text-sm">{t('common.openDetails')}</Link>
           {post && <a href={post.url} target="_blank" rel="noopener noreferrer" className="text-sm underline decoration-primary underline-offset-4">{t('common.viewOnInstagram')}</a>}
         </div>
+        {stories.length > 0 && (
+          <p className="mt-3 text-xs text-muted">{t('place.relatedStories')}:{' '}
+            {stories.map((s2, i) => <span key={s2.id}>{i > 0 && ', '}<Link className="underline" to={to(`places/${s2.slug}`)}>{tr(s2.name, lang)}</Link></span>)}
+          </p>
+        )}
       </div>
     </section>
   );

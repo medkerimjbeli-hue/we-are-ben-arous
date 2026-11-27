@@ -8,7 +8,7 @@ export default function NotFoundPage() {
   const { to } = useLang();
   return (
     <div className="mx-auto max-w-xl px-4 py-28 text-center">
-      <Seo title={t('meta.notFound')} />
+      <Seo title={t('meta.notFound')} noindex />
       <p className="font-display text-8xl font-extrabold text-primary">404</p>
       <h1 className="mt-4 text-3xl font-extrabold">{t('notFound.title')}</h1>
       <p className="mt-3 text-muted">{t('notFound.body')}</p>

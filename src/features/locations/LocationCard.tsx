@@ -40,7 +40,7 @@ export function LocationCard({ location: l, catalog: c, compact = false }: { loc
         </h3>
         <p className="mt-2 line-clamp-3 text-sm text-muted" dir="auto">{summary || t('common.comingSoon')}</p>
         {posts.length > 0 && (
-          <p className="mt-auto flex items-center gap-1.5 pt-4 text-xs text-muted"><Instagram className="h-3.5 w-3.5 text-primary" aria-hidden /> {posts.length} × Instagram</p>
+          <p className="mt-auto flex items-center gap-1.5 pt-4 text-xs text-muted"><Instagram className="h-3.5 w-3.5 text-primary" aria-hidden /> {t('place.instagramCount', { count: posts.length })}</p>
         )}
       </div>
     </article>

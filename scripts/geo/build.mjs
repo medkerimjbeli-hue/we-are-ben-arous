@@ -39,4 +39,7 @@ writeFileSync(resolve(out, 'governorates.geojson'), JSON.stringify(governorates)
 writeFileSync(resolve(out, 'ben-arous-delegations.geojson'), JSON.stringify(delegations));
 writeFileSync(resolve(out, 'meta.json'), JSON.stringify(meta, null, 2));
 copyFileSync(resolve(src, 'LICENSE-DATA.md'), resolve(out, 'LICENSE-DATA.md'));
+// Small name index bundled with the app so lists work even if the map data cannot be fetched.
+const index = governorates.features.map((f) => pick(f.properties, ['id', 'ins_code', 'name_en', 'name_fr', 'name_ar'])).sort((a, b) => a.ins_code.localeCompare(b.ins_code));
+writeFileSync(resolve(root, 'src/data/governorates.json'), `${JSON.stringify(index, null, 2)}\n`);
 console.log(`OK: ${governorates.features.length} governorates, ${delegations.features.length} Ben Arous delegations (Map Tunisia v${pkg.version}).`);

@@ -10,6 +10,8 @@ export const mediaById = (c: Catalog, id: string | null | undefined) => c.media.
 export const postsForLocation = (c: Catalog, locationId: string) => c.socialPosts.filter((p) => p.locationId === locationId);
 /** Posts attached to a delegation but not to any specific location. */
 export const delegationOnlyPosts = (c: Catalog, delegationId: string) => c.socialPosts.filter((p) => p.delegationId === delegationId && !p.locationId);
+/** Published community stories that are about a given place. */
+export const storiesForPlace = (c: Catalog, placeId: string) => c.locations.filter((l) => l.kind === 'story' && l.placeId === placeId);
 export const locationsInDelegation = (c: Catalog, delegationId: string) => c.locations.filter((l) => l.delegationId === delegationId);
 
 /** Featured posts: admin-selected (ordered by featuredRank) when any exist; never ranked by unverified metrics. */

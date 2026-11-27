@@ -21,7 +21,7 @@ export function Footer() {
           </div>
           <p className="mt-5 max-w-md text-sm text-muted">{t('about.independent')}</p>
         </div>
-        <nav aria-label="Footer" className="flex flex-col gap-2 text-sm">
+        <nav aria-label={t('nav.footerLabel')} className="flex flex-col gap-2 text-sm">
           <Link className="text-muted hover:text-white" to={to('explore')}>{t('nav.explore')}</Link>
           <Link className="text-muted hover:text-white" to={to('places')}>{t('nav.places')}</Link>
           <Link className="text-muted hover:text-white" to={to('stories')}>{t('nav.stories')}</Link>

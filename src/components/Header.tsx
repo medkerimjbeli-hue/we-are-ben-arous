@@ -26,7 +26,7 @@ export function Header() {
           <img src={asset('brand/logo-256.webp')} alt="" width={40} height={40} className="h-10 w-10" />
           <span className="font-display text-base font-extrabold tracking-tight" dir="ltr">We Are <span className="text-primary">Ben Arous</span></span>
         </Link>
-        <nav aria-label="Main" className="ms-auto hidden items-center gap-7 md:flex">
+        <nav aria-label={t('nav.mainLabel')} className="ms-auto hidden items-center gap-7 md:flex">
           {links.map((l) => <NavLink key={l.href} to={l.href} className={cls}>{l.label}</NavLink>)}
         </nav>
         <LanguageSwitcher className="ms-auto hidden md:flex md:ms-0" />
@@ -36,7 +36,7 @@ export function Header() {
         </button>
       </div>
       {open && (
-        <nav id="mobile-nav" aria-label="Main" className="border-t border-line bg-ink px-4 pb-6 pt-2 md:hidden">
+        <nav id="mobile-nav" aria-label={t('nav.mainLabel')} className="border-t border-line bg-ink px-4 pb-6 pt-2 md:hidden">
           <ul className="flex flex-col">
             {links.map((l) => (
               <li key={l.href}><NavLink to={l.href} className={({ isActive }) => `block py-3 font-display text-lg font-bold ${isActive ? 'text-primary' : 'text-white'}`}>{l.label}</NavLink></li>

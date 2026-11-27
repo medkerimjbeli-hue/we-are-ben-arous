@@ -6,7 +6,11 @@ import fr from '../src/features/i18n/locales/fr';
 import ar from '../src/features/i18n/locales/ar';
 import { normalizeSearch, pick, missingLangs } from '../src/lib/localize';
 import { parseInstagramUrl } from '../src/features/instagram/instagram';
-import { locationIssues, postIssues, hasErrors } from '../src/features/admin/validation';
+import { locationIssues, postIssues, hasErrors, uploadIssue } from '../src/features/admin/validation';
+import adminEn from '../src/features/i18n/locales/admin.en';
+import adminFr from '../src/features/i18n/locales/admin.fr';
+import adminAr from '../src/features/i18n/locales/admin.ar';
+import { clusterPoints, spreadOffsets } from '../src/features/map/cluster';
 import { seedCatalog } from '../src/data/catalog';
 
 const keys = (o: object, p = ''): string[] => Object.entries(o).flatMap(([k, v]) => (typeof v === 'object' ? keys(v, `${p}${k}.`) : [`${p}${k}`]));
@@ -20,6 +24,17 @@ describe('translations', () => {
       expect([...e].filter((k) => !l.has(k))).toEqual([]);
       expect([...l].filter((k) => !e.has(k))).toEqual([]);
     }
+  });
+  it('admin interface is fully translated in French and Arabic', () => {
+    const e = keys(adminEn);
+    for (const loc of [adminFr, adminAr]) expect(keys(loc)).toEqual(e);
+  });
+  it('every validation issue code has an admin message', () => {
+    const codes = ['nameRequired', 'slugFormat', 'slugTaken', 'delegationRequired', 'coordsPair', 'coordsInvalid', 'latOutside', 'lngOutside', 'verifiedNeedsSource', 'coordsUnverified', 'noCoords', 'nameMissing', 'summaryMissing', 'noCategory', 'noCover', 'coverCredit', 'storyPlaceSelf', 'publishUnknownImage', 'urlInvalid', 'urlTaken', 'labelRequired', 'metricIncomplete', 'featuredRank', 'featuredTaken', 'unlinked', 'reviewNote'];
+    for (const loc of [adminEn, adminFr, adminAr]) for (const c of codes) expect((loc.issues as Record<string, string>)[c], c).toBeTruthy();
+  });
+  it('does not translate proper names of delegations in the UI copy', () => {
+    expect(ar.map.benArous).toBe('بن عروس'); expect(fr.map.benArous).toBe('Ben Arous');
   });
   it('uses the official localized slogans', () => {
     expect(en.brand.slogan).toBe('Your region has more to tell.');
@@ -68,8 +83,10 @@ describe('CMS validation', () => {
     expect(hasErrors(locationIssues({ ...loc, lat: 36.7, lng: null }, c))).toBe(true);
   });
   it('flags missing translations, categories and images as warnings', () => {
-    const msgs = locationIssues(loc, c).map((i) => i.message).join('\n');
-    expect(msgs).toMatch(/Summary missing/); expect(msgs).toMatch(/No category/); expect(msgs).toMatch(/No cover image/);
+    const issues = locationIssues(loc, c);
+    expect(issues.map((i) => i.code)).toEqual(expect.arrayContaining(['summaryMissing', 'noCategory', 'noCover', 'noCoords', 'nameMissing']));
+    expect(issues.every((i) => i.level === 'warning' && i.tag)).toBe(true);
+    expect(issues.find((i) => i.code === 'summaryMissing')?.tag).toBe('description');
   });
   it('prevents duplicate URLs, incomplete metrics and duplicate featured positions', () => {
     const p = c.socialPosts[0];
@@ -80,8 +97,8 @@ describe('CMS validation', () => {
   });
 });
 
+const sql = readFileSync(resolve(__dirname, '../supabase/migrations/20261127000000_init.sql'), 'utf8');
 describe('database authorization (static checks on the migration)', () => {
-  const sql = readFileSync(resolve(__dirname, '../supabase/migrations/20261127000000_init.sql'), 'utf8');
   it('enables RLS on every table', () => {
     for (const t of ['admin_users', 'delegations', 'categories', 'media', 'locations', 'social_posts'])
       expect(sql).toMatch(new RegExp(`alter table public\\.${t} enable row level security`));
@@ -97,5 +114,48 @@ describe('database authorization (static checks on the migration)', () => {
   });
   it('contains no secrets', () => {
     expect(sql).not.toMatch(/service_role|eyJ[a-zA-Z0-9]{20,}/);
+  });
+});
+
+describe('CMS workflow rules', () => {
+  const c = seedCatalog();
+  const loc = c.locations[0];
+  it('stories cannot point to themselves and places do not warn about pins for stories', () => {
+    expect(hasErrors(locationIssues({ ...loc, kind: 'story', placeId: loc.id }, c))).toBe(true);
+    expect(locationIssues({ ...loc, kind: 'story' }, c).some((i) => i.code === 'noCoords')).toBe(false);
+  });
+  it('blocks publishing with an image of unknown permission and flags missing credits', () => {
+    const media = [{ id: 'm1', path: 'x', url: 'x', alt: {}, credit: null, sourceUrl: null, permission: 'unknown' as const, locationId: null, createdAt: '' }];
+    const c2 = { ...c, media };
+    expect(locationIssues({ ...loc, coverMediaId: 'm1', status: 'published' }, c2).map((i) => i.code)).toContain('publishUnknownImage');
+    expect(locationIssues({ ...loc, coverMediaId: 'm1', status: 'draft' }, c2).map((i) => i.code)).toContain('coverCredit');
+  });
+});
+
+describe('image upload restrictions', () => {
+  it('accepts web images up to 8 MB only', () => {
+    expect(uploadIssue({ name: 'a.jpg', type: 'image/jpeg', size: 1000 })).toBeNull();
+    expect(uploadIssue({ name: 'a.webp', type: 'image/webp', size: 8 * 1024 * 1024 })).toBeNull();
+    expect(uploadIssue({ name: 'a.jpg', type: 'image/jpeg', size: 8 * 1024 * 1024 + 1 })).toBe('tooLarge');
+    expect(uploadIssue({ name: 'a.svg', type: 'image/svg+xml', size: 10 })).toBe('badType');
+    expect(uploadIssue({ name: 'a.html', type: 'image/png', size: 10 })).toBe('badType');
+    expect(uploadIssue({ name: 'a.gif', type: 'image/gif', size: 10 })).toBe('badType');
+  });
+  it('matches the storage bucket limits in the migration', () => {
+    expect(sql).toMatch(/8388608, array\['image\/jpeg', 'image\/png', 'image\/webp', 'image\/avif'\]/);
+  });
+});
+
+describe('pin clustering', () => {
+  it('groups nearby points and keeps distant ones apart', () => {
+    const r = clusterPoints([{ id: 'a', x: 0, y: 0 }, { id: 'b', x: 10, y: 10 }, { id: 'c', x: 300, y: 300 }], 44);
+    expect(r.map((k) => k.ids)).toEqual([['a', 'b'], ['c']]);
+    expect(r[0].x).toBe(5);
+  });
+  it('fans out identical positions on a circle', () => {
+    expect(spreadOffsets(1)).toEqual([[0, 0]]);
+    const o = spreadOffsets(4, 20);
+    expect(new Set(o.map(String)).size).toBe(4);
+    for (const [x, y] of o) expect(Math.round(Math.hypot(x, y))).toBe(20);
   });
 });

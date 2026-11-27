@@ -41,6 +41,10 @@ describe('geographic data', () => {
       expect(d.governorateId).toBe('TN-13');
     }
   });
+  it('bundled governorate index matches the geographic data', () => {
+    const index = readJson('src/data/governorates.json');
+    expect(index.map((g: { id: string }) => g.id).sort()).toEqual(gov.features.map((f: { properties: { id: string } }) => f.properties.id).sort());
+  });
   it('keeps the ODbL licence next to the derived data', () => {
     expect(readFileSync(resolve(root, 'public/geo/LICENSE-DATA.md'), 'utf8')).toMatch(/Open Database License/);
   });

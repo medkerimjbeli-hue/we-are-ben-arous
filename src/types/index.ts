@@ -37,6 +37,11 @@ export interface Location {
   status: ContentStatus;
   featured: boolean;
   sourceNotes: string | null;
+  /** Optional SEO overrides; fall back to name/summary. */
+  seoTitle: Localized;
+  seoDescription: Localized;
+  /** For stories: the place this story is about (shown as a related story on that place). */
+  placeId: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -81,4 +86,14 @@ export interface Catalog {
   locations: Location[];
   socialPosts: SocialPost[];
   media: Media[];
+}
+
+export interface Revision {
+  id: number;
+  tableName: string;
+  recordId: string;
+  action: 'INSERT' | 'UPDATE' | 'DELETE';
+  changedBy: string | null;
+  changedAt: string;
+  snapshot: Record<string, unknown>;
 }
