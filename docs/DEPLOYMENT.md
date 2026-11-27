@@ -1,4 +1,47 @@
-# Deployment: GitHub Pages
+# Deployment
+
+The site is a static Vite build (`dist/`) with Supabase as the backend. It can be hosted on **Netlify** (recommended, served at `/`) or on **GitHub Pages** (served at `/we-are-ben-arous/`). The base path comes from `VITE_BASE_PATH`, so the same code works on both.
+
+| Host | Base path | SPA refresh handled by | Config file |
+| --- | --- | --- | --- |
+| Netlify | `/` | `[[redirects]] /* → /index.html 200` | `netlify.toml` |
+| GitHub Pages | `/we-are-ben-arous/` | `404.html` copy of `index.html` | `.github/workflows/deploy.yml` |
+
+## Netlify (recommended)
+
+Everything Netlify needs is in **`netlify.toml`** at the repository root:
+- build command `npm run build`, publish directory `dist`, Node 22, `VITE_BASE_PATH=/`;
+- **SPA fallback**: every path without a matching file is served `index.html` with status 200, so a direct visit or refresh on `/en`, `/fr`, `/ar`, `/fr/places/saraya`, `/ar/explore/ben-arous/mornag` or `/admin/locations` works. Real files (JS/CSS, `/geo/*.geojson`, images, `robots.txt`, `sitemap.xml`) are served first;
+- cache headers (`/assets/*` cached for a year, `/geo/*` revalidated daily), basic security headers, and `X-Robots-Tag: noindex` on `/admin/*`.
+
+The build automatically uses Netlify's primary URL (`URL`) for canonical links, Open Graph tags, `sitemap.xml` and `robots.txt`, unless you set `VITE_SITE_URL`.
+
+### Steps in Netlify
+
+1. **Add new site → Import an existing project → GitHub**, then choose `medkerimjbeli-hue/we-are-ben-arous`.
+2. **Branch to deploy:** `main`. Leave *Build command* / *Publish directory* as detected from `netlify.toml` (`npm run build` / `dist`); don't override them, and leave *Base directory* empty.
+3. **Site configuration → Environment variables → Add a variable** (scope: *Builds*; all deploy contexts):
+
+   | Key | Value | Secret? |
+   | --- | --- | --- |
+   | `VITE_SUPABASE_URL` | `https://<project-ref>.supabase.co` | No, public |
+   | `VITE_SUPABASE_ANON_KEY` | the **anon / publishable** key | No, public (protected by RLS) |
+   | `VITE_SITE_URL` | *optional*: your custom domain, e.g. `https://www.example.tn` | No |
+
+   Don't add `VITE_BASE_PATH` (it's already `/` in `netlify.toml`).
+   **Never** add the Supabase *service_role / secret* key, the database password or any Meta token to Netlify. Every `VITE_*` value is built into public JavaScript.
+   Without the two Supabase variables, the site still works with the bundled starter content, and `/admin` explains that the backend isn't configured.
+4. **Deploy site.** When it finishes, open `https://<your-site>.netlify.app/fr/places/saraya` directly and refresh it; it should load the page, not a 404.
+5. In **Supabase → Authentication → URL Configuration**, set *Site URL* to the Netlify URL and add `https://<your-site>.netlify.app/admin` to *Redirect URLs* (needed for invitations and password resets).
+6. Optional: **Domain management → Add a domain** for a custom domain, then update the Supabase Site URL and redirect URL, and set `VITE_SITE_URL` (or let Netlify's primary domain be used) and redeploy.
+
+Each push to `main` redeploys automatically. *Deploy previews* for pull requests also work, because they use the same base path `/`. If you use previews with Supabase, add `https://deploy-preview-*--<your-site>.netlify.app/admin` to the Supabase redirect URLs.
+
+**If you host on Netlify only:** go to GitHub → Settings → Pages and set *Source* to **None**, or delete `.github/workflows/deploy.yml`, so both hosts aren't publishing. The workflow's tests are still worth running; you can rename it and remove the deploy job.
+
+---
+
+## GitHub Pages (alternative)
 
 The repository has no git remote yet, so the final URL isn't known. The workflow works out the base path automatically from GitHub, so you don't need to change any code.
 
@@ -49,7 +92,7 @@ To test a sub-path like Pages: `$env:VITE_BASE_PATH='/WE-ARE-BEN-AROUS/'; npm ru
 2. Set the repository variables `PAGES_BASE_PATH=/` and `SITE_URL=https://your-domain`.
 3. Add the new URL to Supabase Auth redirect URLs.
 
-No code changes are needed: the base path, canonical URLs, sitemap and Open Graph tags all come from these variables. On a host with rewrites (Netlify, Vercel, Cloudflare Pages, nginx), rewrite every unknown path to `/index.html` with status 200.
+No code changes are needed: the base path, canonical URLs, sitemap and Open Graph tags all come from these variables. On Netlify this is already configured in `netlify.toml`. On other hosts with rewrites (Vercel, Cloudflare Pages, nginx), rewrite every unknown path to `/index.html` with status 200.
 
 ## SEO files
 

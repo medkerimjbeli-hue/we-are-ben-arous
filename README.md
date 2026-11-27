@@ -8,7 +8,7 @@ A multilingual (English / French / Arabic) regional discovery and storytelling p
 
 ## Stack
 
-React 19 · TypeScript (strict) · Vite · Tailwind CSS 4 · React Router 7 · i18next · Leaflet · Supabase (Auth, Postgres + RLS, Storage) · Vitest + Testing Library. Static hosting on GitHub Pages.
+React 19 · TypeScript (strict) · Vite · Tailwind CSS 4 · React Router 7 · i18next · Leaflet · Supabase (Auth, Postgres + RLS, Storage) · Vitest + Testing Library. Static hosting on Netlify (`netlify.toml`) or GitHub Pages.
 
 ## Quick start
 
@@ -64,7 +64,7 @@ docs/             deployment, backend, content guide, implementation report
 
 ## Documentation
 
-- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): GitHub Pages and custom domain
+- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): Netlify, GitHub Pages and custom domains
 - [docs/BACKEND_SETUP.md](docs/BACKEND_SETUP.md): Supabase, RLS, storage and the first administrator
 - [docs/CONTENT_GUIDE.md](docs/CONTENT_GUIDE.md): how to manage content in the dashboard
 - [docs/INSTAGRAM.md](docs/INSTAGRAM.md): Instagram embeds, featured posts and the optional metrics integration

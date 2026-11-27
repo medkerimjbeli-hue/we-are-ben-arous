@@ -3,10 +3,13 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-// VITE_BASE_PATH must match the GitHub Pages path, e.g. "/WE-ARE-BEN-AROUS/" for
-// https://<user>.github.io/WE-ARE-BEN-AROUS/, or "/" for a custom domain.
+// Base path of the deployed site:
+//   Netlify / custom domain: "/"                  (default; also set in netlify.toml)
+//   GitHub Pages:            "/we-are-ben-arous/" (set by .github/workflows/deploy.yml)
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+  // On Netlify, fall back to the site's primary URL for canonical/OG/sitemap URLs when VITE_SITE_URL is not set.
+  if (!env.VITE_SITE_URL && process.env.NETLIFY === 'true' && process.env.URL) process.env.VITE_SITE_URL = process.env.URL;
   const base = env.VITE_BASE_PATH || '/';
   return {
     base: base.endsWith('/') ? base : `${base}/`,

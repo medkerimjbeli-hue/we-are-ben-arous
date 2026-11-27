@@ -1,0 +1,46 @@
+# Netlify configuration for We Are Ben Arous (static Vite SPA + Supabase backend).
+# Secrets never go here: only public VITE_* values are set in the Netlify UI (see docs/DEPLOYMENT.md).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Netlify serves the site at the domain root.
+  VITE_BASE_PATH = "/"
+
+# SPA fallback: any path that is not a real file (e.g. /fr/places/saraya, /admin/locations)
+# is served index.html with status 200 so React Router can render it on refresh/direct visit.
+# Real files (assets, /geo/*.geojson, images, sitemap.xml, robots.txt) are served first because
+# Netlify only applies this rule when no file matches (force = false by default).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Fingerprinted build assets never change — cache them for a year.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Map data is versioned with the site but not fingerprinted — revalidate daily.
+[[headers]]
+  for = "/geo/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, must-revalidate"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Keep the admin area out of search engines.
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

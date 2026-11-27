@@ -1,11 +1,11 @@
-// GitHub Pages helpers: SPA fallback (404.html), robots.txt and sitemap.xml.
+// Static-host helpers: 404.html SPA fallback (GitHub Pages; Netlify uses netlify.toml), robots.txt and sitemap.xml.
 import { copyFileSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = resolve(root, 'dist');
 // Read VITE_SITE_URL from the environment or .env files (same precedence as Vite, simplified).
-let site = process.env.VITE_SITE_URL || '';
+let site = process.env.VITE_SITE_URL || (process.env.NETLIFY === 'true' ? process.env.URL : '') || '';
 for (const f of ['.env.production.local', '.env.local', '.env.production', '.env']) {
   if (site || !existsSync(resolve(root, f))) continue;
   const m = readFileSync(resolve(root, f), 'utf8').match(/^VITE_SITE_URL=(.*)$/m);
